@@ -1,0 +1,35 @@
+---
+title: Event
+---
+
+This can invoke events from Python to JavaScript. [more guide](/docs/guides/calling-js-from-python).
+
+### Python Backend
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+########## Usage ##########
+
+# Invoke the 'hello_event' event with a message
+window.invoke('hello_event', {'message': 'Hello from Python!'})
+```
+
+### JavaScript Frontend
+
+In JavaScript, you can receive and handle events triggered from Python. You can use the `pyloid-js` library to receive events.
+
+```javascript
+import { event } from 'pyloid-js';
+
+// Register the event listener
+event.listen('hello_event', (data) => {
+  console.log('hello_event', data.message);
+});
+
+// Unregister the event listener
+event.unlisten('hello_event');
+```

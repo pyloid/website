@@ -1,0 +1,338 @@
+---
+title: PyloidTimer
+---
+
+PyloidTimer is a convenient timer management class based on PySide6's QTimer. It allows you to easily create and manage various types of timers with thread-safe operations.
+
+---
+
+## Initialization
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">PyloidTimer</span>
+
+Creates a new PyloidTimer instance for managing timers.
+
+```python
+from pyloid.timer import PyloidTimer
+
+timer_manager = PyloidTimer()
+```
+
+**Returns**
+
+<Returns type='PyloidTimer' description='A new PyloidTimer instance.' />
+
+---
+
+## Timer Creation
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">start_periodic_timer</span>
+
+Starts a timer that runs periodically at specified intervals.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+timer_manager = PyloidTimer()
+
+########## Usage ##########
+
+def print_hello():
+    print("Hello!")
+
+# Start a timer that prints "Hello!" every 2 seconds
+timer_id = timer_manager.start_periodic_timer(2000, print_hello)
+
+app.run()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    interval: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Timer interval in milliseconds.',
+      required: true,
+    },
+    callback: {
+      type: 'Callable[[], None]',
+      typeDescription: 'Callable[[], None]',
+      description: 'Function to call when timer fires.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='int' description='Unique timer ID that can be used to control the timer.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">start_single_shot_timer</span>
+
+Starts a timer that runs only once after the specified delay.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+timer_manager = PyloidTimer()
+
+########## Usage ##########
+
+def delayed_message():
+    print("5 seconds have passed!")
+
+# Start a single-shot timer that prints a message after 5 seconds
+timer_id = timer_manager.start_single_shot_timer(5000, delayed_message)
+
+app.run()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    interval: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Delay in milliseconds before timer fires.',
+      required: true,
+    },
+    callback: {
+      type: 'Callable[[], None]',
+      typeDescription: 'Callable[[], None]',
+      description: 'Function to call when timer fires.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='int' description='Unique timer ID that can be used to control the timer.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">start_precise_periodic_timer</span>
+
+Starts a high-precision periodic timer for timing-critical applications.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+timer_manager = PyloidTimer()
+
+########## Usage ##########
+
+def precise_task():
+    print("Executing precise task")
+
+# Start a precise periodic timer with 100ms interval
+precise_timer_id = timer_manager.start_precise_periodic_timer(100, precise_task)
+
+app.run()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    interval: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Precise timer interval in milliseconds.',
+      required: true,
+    },
+    callback: {
+      type: 'Callable[[], None]',
+      typeDescription: 'Callable[[], None]',
+      description: 'Function to call when timer fires.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='int' description='Unique timer ID that can be used to control the timer.' />
+
+---
+
+## Timer Control
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">stop_timer</span>
+
+Stops a running timer using its ID.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+timer_manager = PyloidTimer()
+
+########## Usage ##########
+
+# Stop a timer using its ID
+timer_manager.stop_timer(timer_id)
+
+app.run()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    timer_id: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'The ID of the timer to stop.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if timer was stopped successfully, False if timer ID was not found.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_interval</span>
+
+Changes the interval of a running timer.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+timer_manager = PyloidTimer()
+
+########## Usage ##########
+
+# Change the timer interval to 3 seconds
+timer_manager.set_interval(timer_id, 3000)
+
+app.run()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    timer_id: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'The ID of the timer to modify.',
+      required: true,
+    },
+    interval: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'New interval in milliseconds.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if interval was changed successfully, False if timer ID was not found.' />
+
+---
+
+## Timer Information
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">is_timer_active</span>
+
+Checks if a timer is currently running.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+timer_manager = PyloidTimer()
+
+########## Usage ##########
+
+if timer_manager.is_timer_active(timer_id):
+    print("The timer is still running.")
+else:
+    print("The timer has stopped.")
+
+app.run()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    timer_id: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'The ID of the timer to check.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if timer is active, False otherwise.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_remaining_time</span>
+
+Gets the remaining time until a timer fires.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+timer_manager = PyloidTimer()
+
+########## Usage ##########
+
+remaining_time = timer_manager.get_remaining_time(timer_id)
+if remaining_time is not None:
+    print(f"{remaining_time}ms left until the timer fires.")
+
+app.run()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    timer_id: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'The ID of the timer to check.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='Optional[int]' description='Remaining time in milliseconds, or None if timer ID is not found.' />

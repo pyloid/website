@@ -1,0 +1,815 @@
+---
+title: Monitor
+---
+
+The Monitor class provides functionality to manage and manipulate information about computer monitors.
+
+---
+
+## Initialization
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+# Monitor objects are typically accessed through app.get_monitors()
+```
+
+---
+
+## Screen Capture
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">capture</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]  # Get first monitor
+
+# Capture full screen
+monitor.capture("screenshot.png")
+
+# Capture specific area
+monitor.capture("area.png", x=100, y=100, width=800, height=600)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    save_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to save the captured image.',
+      required: true,
+    },
+    x: {
+      type: 'Optional[int]',
+      typeDescription: 'Optional[int]',
+      description: 'Starting x-coordinate for capture.',
+      default: 'None',
+    },
+    y: {
+      type: 'Optional[int]',
+      typeDescription: 'Optional[int]',
+      description: 'Starting y-coordinate for capture.',
+      default: 'None',
+    },
+    width: {
+      type: 'Optional[int]',
+      typeDescription: 'Optional[int]',
+      description: 'Width of the area to capture.',
+      default: 'None',
+    },
+    height: {
+      type: 'Optional[int]',
+      typeDescription: 'Optional[int]',
+      description: 'Height of the area to capture.',
+      default: 'None',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Optional[str]'
+  description='Path of the saved image or None if capture fails.'
+/>
+
+---
+
+## Monitor Information
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">info</span>
+
+Returns information about the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+info = monitor.info()
+print(info)
+
+```
+
+**Returns**
+
+<Returns type='dict' description='Dictionary containing monitor information.' />
+
+```json
+{
+    'index': 0,
+    'name': 'Primary Monitor',
+    'manufacturer': 'Dell',
+    'model': 'U2718Q',
+    'serial_number': 'SN123456789',
+    'x': 0,
+    'y': 0,
+    'width': 2560,
+    'height': 1440,
+    'is_primary': True,
+    'geometry': {
+        'x': 0,
+        'y': 0,
+        'width': 2560,
+        'height': 1440,
+    },
+    'size': {
+        'width': 2560,
+        'height': 1440,
+    },
+    'available_geometry': {
+        'x': 0,
+        'y': 0,
+        'width': 2560,
+        'height': 1400,
+    },
+    'available_size': {
+        'width': 2560,
+        'height': 1400,
+    },
+    'virtual_geometry': {
+        'x': 0,
+        'y': 0,
+        'width': 5120,
+        'height': 1440,
+    },
+    'virtual_size': {
+        'width': 5120,
+        'height': 1440,
+    },
+    'available_virtual_geometry': {
+        'x': 0,
+        'y': 0,
+        'width': 5120,
+        'height': 1400,
+    },
+    'available_virtual_size': {
+        'width': 5120,
+        'height': 1400,
+    },
+    'physical_size': {
+        'width': 600,
+        'height': 340,
+    },
+    'depth': 24,
+    'device_pixel_ratio': 1.0,
+    'logical_dots_per_inch': 96.0,
+    'logical_dots_per_inch_x': 96.0,
+    'logical_dots_per_inch_y': 96.0,
+    'orientation': 'Landscape',
+    'physical_dots_per_inch': 109.0,
+    'physical_dots_per_inch_x': 109.0,
+    'physical_dots_per_inch_y': 109.0,
+    'refresh_rate': 60.0,
+}
+```
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">is_primary</span>
+
+Checks if the monitor is the primary monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+is_primary = monitor.is_primary()
+print(f"Is primary monitor: {is_primary}")
+```
+
+**Returns**
+
+<Returns type='bool' description='True if primary monitor, False otherwise.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">name</span>
+
+Returns the name of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+name = monitor.name()
+print(f"Monitor name: {name}")
+```
+
+**Returns**
+
+<Returns type='str' description='Monitor name.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">manufacturer</span>
+
+Returns the manufacturer of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+manufacturer = monitor.manufacturer()
+print(f"Manufacturer: {manufacturer}")
+```
+
+**Returns**
+
+<Returns type='str' description='Monitor manufacturer name.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">model</span>
+
+Returns the model of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+model = monitor.model()
+print(f"Model: {model}")
+```
+
+**Returns**
+
+<Returns type='str' description='Monitor model name.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">serial_number</span>
+
+Returns the serial number of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+serial = monitor.serial_number()
+print(f"Serial number: {serial}")
+```
+
+**Returns**
+
+<Returns type='str' description='Monitor serial number.' />
+
+---
+
+## Geometry and Size
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">size</span>
+
+Returns the size of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+size = monitor.size()
+print(f"Size: {size['width']}x{size['height']}")
+```
+
+**Returns**
+
+<Returns type='dict' description="Dictionary with 'width' and 'height' keys." />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">geometry</span>
+
+Returns the geometry of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+geometry = monitor.geometry()
+print(f"Position: ({geometry['x']}, {geometry['y']}) Size: {geometry['width']}x{geometry['height']}")
+```
+
+**Returns**
+
+<Returns
+  type='dict'
+  description="Dictionary with 'x', 'y', 'width', 'height' keys."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">available_geometry</span>
+
+Returns the available geometry of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+available_geometry = monitor.available_geometry()
+print(f"Available area: {available_geometry}")
+```
+
+**Returns**
+
+<Returns
+  type='dict'
+  description="Dictionary with 'x', 'y', 'width', 'height' keys."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">available_size</span>
+
+Returns the available size of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+available_size = monitor.available_size()
+print(f"Available size: {available_size}")
+```
+
+**Returns**
+
+<Returns type='dict' description="Dictionary with 'width' and 'height' keys." />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">virtual_geometry</span>
+
+Returns the virtual geometry of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+virtual_geometry = monitor.virtual_geometry()
+print(f"Virtual geometry: {virtual_geometry}")
+```
+
+**Returns**
+
+<Returns
+  type='dict'
+  description="Dictionary with 'x', 'y', 'width', 'height' keys."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">virtual_size</span>
+
+Returns the virtual size of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+virtual_size = monitor.virtual_size()
+print(f"Virtual size: {virtual_size}")
+```
+
+**Returns**
+
+<Returns type='dict' description="Dictionary with 'width' and 'height' keys." />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">available_virtual_geometry</span>
+
+Returns the available virtual geometry of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+available_virtual_geometry = monitor.available_virtual_geometry()
+print(f"Available virtual geometry: {available_virtual_geometry}")
+```
+
+**Returns**
+
+<Returns
+  type='dict'
+  description="Dictionary with 'x', 'y', 'width', 'height' keys."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">available_virtual_size</span>
+
+Returns the available virtual size of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+available_virtual_size = monitor.available_virtual_size()
+print(f"Available virtual size: {available_virtual_size}")
+```
+
+**Returns**
+
+<Returns type='dict' description="Dictionary with 'width' and 'height' keys." />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">physical_size</span>
+
+Returns the physical size of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+physical_size = monitor.physical_size()
+print(f"Physical size: {physical_size['width']}x{physical_size['height']} mm")
+```
+
+**Returns**
+
+<Returns
+  type='dict'
+  description="Dictionary with 'width' and 'height' keys (in millimeters)."
+/>
+
+---
+
+## DPI and Display Properties
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">depth</span>
+
+Returns the depth of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+depth = monitor.depth()
+print(f"Color depth: {depth} bits")
+```
+
+**Returns**
+
+<Returns type='int' description='Color depth of the monitor.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">device_pixel_ratio</span>
+
+Returns the device pixel ratio of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+ratio = monitor.device_pixel_ratio()
+print(f"Device pixel ratio: {ratio}")
+```
+
+**Returns**
+
+<Returns type='float' description='Device pixel ratio.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">logical_dots_per_inch</span>
+
+Returns the logical dots per inch (DPI) of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+dpi = monitor.logical_dots_per_inch()
+print(f"Logical DPI: {dpi}")
+```
+
+**Returns**
+
+<Returns type='float' description='Logical DPI.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">logical_dots_per_inch_x</span>
+
+Returns the logical dots per inch (DPI) along the X axis of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+dpi_x = monitor.logical_dots_per_inch_x()
+print(f"Horizontal logical DPI: {dpi_x}")
+```
+
+**Returns**
+
+<Returns type='float' description='Horizontal logical DPI.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">logical_dots_per_inch_y</span>
+
+Returns the logical dots per inch (DPI) along the Y axis of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+dpi_y = monitor.logical_dots_per_inch_y()
+print(f"Vertical logical DPI: {dpi_y}")
+```
+
+**Returns**
+
+<Returns type='float' description='Vertical logical DPI.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">physical_dots_per_inch</span>
+
+Returns the physical dots per inch (DPI) of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+physical_dpi = monitor.physical_dots_per_inch()
+print(f"Physical DPI: {physical_dpi}")
+```
+
+**Returns**
+
+<Returns type='float' description='Physical DPI.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">physical_dots_per_inch_x</span>
+
+Returns the physical dots per inch (DPI) along the X axis of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+physical_dpi_x = monitor.physical_dots_per_inch_x()
+print(f"Horizontal physical DPI: {physical_dpi_x}")
+```
+
+**Returns**
+
+<Returns type='float' description='Horizontal physical DPI.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">physical_dots_per_inch_y</span>
+
+Returns the physical dots per inch (DPI) along the Y axis of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+physical_dpi_y = monitor.physical_dots_per_inch_y()
+print(f"Vertical physical DPI: {physical_dpi_y}")
+```
+
+**Returns**
+
+<Returns type='float' description='Vertical physical DPI.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">orientation</span>
+
+Returns the orientation of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+orientation = monitor.orientation()
+print(f"Orientation: {orientation}")
+```
+
+**Returns**
+
+<Returns
+  type='str'
+  description="Monitor orientation ('Portrait', 'Landscape', etc.)."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">refresh_rate</span>
+
+Returns the refresh rate of the monitor.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+refresh_rate = monitor.refresh_rate()
+print(f"Refresh rate: {refresh_rate} Hz")
+```
+
+**Returns**
+
+<Returns type='float' description='Monitor refresh rate (Hz).' />
+
+---
+
+## Event Callbacks
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">geometry_changed</span>
+
+Registers a callback for the event that occurs when the geometry of the monitor changes.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+def on_geometry_changed():
+    print("Monitor geometry changed!")
+
+monitor.geometry_changed(on_geometry_changed)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    callback: {
+      type: 'Callable',
+      typeDescription: 'Callable',
+      description: 'Function to be called when geometry changes.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">orientation_changed</span>
+
+Registers a callback for the event that occurs when the orientation of the monitor changes.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+def on_orientation_changed():
+    print("Monitor orientation changed!")
+
+monitor.orientation_changed(on_orientation_changed)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    callback: {
+      type: 'Callable',
+      typeDescription: 'Callable',
+      description: 'Function to be called when orientation changes.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">refresh_rate_changed</span>
+
+Registers a callback for the event that occurs when the refresh rate of the monitor changes.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+monitors = app.get_monitors()
+monitor = monitors[0]
+
+def on_refresh_rate_changed():
+    print("Monitor refresh rate changed!")
+
+monitor.refresh_rate_changed(on_refresh_rate_changed)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    callback: {
+      type: 'Callable',
+      typeDescription: 'Callable',
+      description: 'Function to be called when refresh rate changes.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />

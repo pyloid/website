@@ -1,0 +1,678 @@
+# BaseAPI
+
+The `BaseAPI` class provides asynchronous methods to interact with the Pyloid backend via `window.__PYLOID__`. All methods automatically wait for Pyloid initialization before executing.
+`baseAPI` is an singleton instance of the `BaseAPI` class.
+
+---
+
+## Window Management
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getWindowId</span>
+
+Gets the unique identifier for the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.getWindowId().then((id) => console.log(`Window ID: ${id}`));
+```
+
+**Returns**
+
+<Returns type='Promise&lt;string&gt;' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getWindowProperties</span>
+
+Retrieves properties associated with the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.getWindowProperties().then((props) => console.log(props));
+```
+
+**Returns**
+
+<Returns type='Promise&lt;WindowProperties&gt;' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">close</span>
+
+Closes the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.close().then(() => console.log('Window closed.'));
+```
+
+**Returns**
+
+<Returns type='Promise&lt;void&gt;' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">hide</span>
+
+Hides the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.hide().then(() => console.log('Window hidden.'));
+```
+
+**Returns**
+
+<Returns type='Promise&lt;void&gt;' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">show</span>
+
+Shows the current window if it is hidden.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.show().then(() => console.log('Window shown.'));
+```
+
+**Returns**
+
+<Returns type='Promise&lt;void&gt;' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">focus</span>
+
+Brings the current window to the foreground and gives it focus.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.focus().then(() => console.log('Window focused.'));
+```
+
+**Returns**
+
+<Returns type='Promise&lt;void&gt;' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">showAndFocus</span>
+
+Shows the window (if hidden) and brings it to the foreground with focus.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.showAndFocus().then(() => console.log('Window shown and focused.'));
+```
+
+**Returns**
+
+<Returns type='Promise&lt;void&gt;' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">fullscreen</span>
+
+Makes the current window fullscreen.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.fullscreen().then(() => console.log('Window is now fullscreen.'));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the fullscreen operation is initiated.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">toggleFullscreen</span>
+
+Toggles the fullscreen state of the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.toggleFullscreen().then(() => console.log('Fullscreen toggled.'));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the toggle operation is initiated.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">minimize</span>
+
+Minimizes the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.minimize().then(() => console.log('Window minimized.'));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the minimize operation is initiated.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">maximize</span>
+
+Maximizes the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.maximize().then(() => console.log('Window maximized.'));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the maximize operation is initiated.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">unmaximize</span>
+
+Restores the window from a maximized state.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .unmaximize()
+  .then(() => console.log('Window restored from maximized state.'));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the unmaximize operation is initiated.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">toggleMaximize</span>
+
+Toggles the maximized state of the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.toggleMaximize().then(() => console.log('Maximize toggled.'));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the toggle operation is initiated.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">isFullscreen</span>
+
+Checks if the current window is in fullscreen mode.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .isFullscreen()
+  .then((isFullscreen) => console.log(`Is fullscreen: ${isFullscreen}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;boolean&gt;'
+  description='A promise that resolves with true if fullscreen, false otherwise.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">isMaximized</span>
+
+Checks if the current window is maximized.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .isMaximized()
+  .then((isMaximized) => console.log(`Is maximized: ${isMaximized}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;boolean&gt;'
+  description='A promise that resolves with true if maximized, false otherwise.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">setTitle</span>
+
+Sets the title of the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.setTitle('New Title').then(() => console.log('Title set.'));
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    title: {
+      type: 'string',
+      typeDescription: 'string',
+      description: 'The new title for the window.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the title is set.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">setSize</span>
+
+Sets the size (width and height) of the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.setSize(1024, 768).then(() => console.log('Window size set.'));
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    width: {
+      type: 'number',
+      typeDescription: 'number',
+      description: 'The desired width in pixels.',
+      required: true,
+    },
+    height: {
+      type: 'number',
+      typeDescription: 'number',
+      description: 'The desired height in pixels.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the size is set.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">setPosition</span>
+
+Sets the position (x and y coordinates) of the current window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.setPosition(100, 100).then(() => console.log('Window position set.'));
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    x: {
+      type: 'number',
+      typeDescription: 'number',
+      description: 'The desired x-coordinate.',
+      required: true,
+    },
+    y: {
+      type: 'number',
+      typeDescription: 'number',
+      description: 'The desired y-coordinate.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the position is set.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">setFrame</span>
+
+Sets whether the window should have a standard OS frame.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.setFrame(true).then(() => console.log('Frame set.'));
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    frame: {
+      type: 'boolean',
+      typeDescription: 'boolean',
+      description: 'True to show the frame, false to hide it.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the frame state is set.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getFrame</span>
+
+Gets the current frame state of the window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.getFrame().then((frame) => console.log(`Frame visible: ${frame}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;boolean&gt;'
+  description='A promise that resolves with true if the frame is visible, false otherwise.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getTitle</span>
+
+Gets the current title of the window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.getTitle().then((title) => console.log(`Window title: ${title}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;string&gt;'
+  description='A promise that resolves with the window title string.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getSize</span>
+
+Gets the current size (width and height) of the window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .getSize()
+  .then((size) => console.log(`Window size: ${size.width}x${size.height}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;Size&gt;'
+  description='A promise that resolves with an object containing the width and height.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getPosition</span>
+
+Gets the current position (x and y coordinates) of the window.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .getPosition()
+  .then((position) =>
+    console.log(`Window position: (${position.x}, ${position.y})`)
+  );
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;Position&gt;'
+  description='A promise that resolves with an object containing the x and y coordinates.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">setClipboardText</span>
+
+Sets the system clipboard text content.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .setClipboardText('Hello, World!')
+  .then(() => console.log('Clipboard text set.'));
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    text: {
+      type: 'string',
+      typeDescription: 'string',
+      description: 'The text to write to the clipboard.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the clipboard text is set.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getClipboardText</span>
+
+Gets the current text content from the system clipboard.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .getClipboardText()
+  .then((text) => console.log(`Clipboard text: ${text}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;string&gt;'
+  description='A promise that resolves with the clipboard text.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">setClipboardImage</span>
+
+Sets the system clipboard image content from a file path.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .setClipboardImage('/path/to/image.png', 'png')
+  .then(() => console.log('Clipboard image set.'));
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    imagePath: {
+      type: 'string',
+      typeDescription: 'string',
+      description: 'The path to the image file.',
+      required: true,
+    },
+    format: {
+      type: 'string',
+      typeDescription: 'string',
+      description: "The format of the image (e.g., 'png', 'jpeg').",
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the clipboard image is set.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getClipboardImage</span>
+
+Gets the current image content from the system clipboard.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .getClipboardImage()
+  .then((imageData) => console.log(`Clipboard image data: ${imageData}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;string&gt;'
+  description='A promise that resolves with the clipboard image data.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">quit</span>
+
+Quits the entire application.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.quit().then(() => console.log('Application quit.'));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;void&gt;'
+  description='A promise that resolves when the quit operation is initiated.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getPlatform</span>
+
+Gets the underlying operating system platform.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.getPlatform().then((platform) => console.log(`Platform: ${platform}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;Platform&gt;'
+  description='A promise that resolves with the platform name ("windows", "linux", or "macos").'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">isProduction</span>
+
+Checks if the application is running in production mode.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .isProduction()
+  .then((isProd) => console.log(`Is production: ${isProd}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;boolean&gt;'
+  description='A promise that resolves with true if in production, false otherwise.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getProductionPath</span>
+
+Resolves a relative path to an absolute path within the application's production build directory.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI
+  .getProductionPath('assets/image.png')
+  .then((absPath) => console.log(`Absolute path: ${absPath}`));
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'string',
+      typeDescription: 'string',
+      description: 'The relative path within the production build.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Promise&lt;string&gt;'
+  description='A promise that resolves with the absolute path.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">getServerUrl</span>
+
+Retrieves the server URL.
+
+```javascript
+import { baseAPI } from 'pyloid-js';
+
+baseAPI.getServerUrl().then((url) => console.log(`server URL: ${url}`));
+```
+
+**Returns**
+
+<Returns
+  type='Promise&lt;string&gt;'
+  description='A promise that resolves with the server URL.'
+/>

@@ -1,0 +1,1446 @@
+---
+title: Pyloid
+---
+
+Pyloid is a desktop application framework built on top of PySide6. It simplifies window creation, system tray management, clipboard interaction, RPC communication, file watching, and more. All functions in Pyloid are thread-safe, meaning they can be safely executed from threads other than the main thread.
+
+---
+
+## Initialization
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    app_name: {
+      type: 'str',
+      typeDescription: 'str',
+      description:
+        'Name of the application (used for auto-start and single-instance logic).',
+      required: true,
+    },
+    single_instance: {
+      type: 'bool',
+      typeDescription: 'bool | None',
+      description: 'Whether to enforce a single running instance.',
+      default: 'True',
+    },
+    server: {
+      type: 'Any',
+      typeDescription: 'Any | None | PyloidRPC | FastAPIAdapter',
+      description: 'Server instance for frontend communication.',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='Pyloid' description='The initialized application instance' />
+
+---
+
+## Window Management
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">create_window</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+window = app.create_window(
+    title="Main Window",
+    width=1024,
+    height=768,
+    x=100,
+    y=100,
+    frame=True,
+    context_menu=True,
+    dev_tools=True,
+    rpc=rpc
+)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    title: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Title of the window',
+      required: true,
+    },
+    width: {
+      type: 'int',
+      typeDescription: 'int | None',
+      description: 'Width of the window',
+      default: 800,
+    },
+    height: {
+      type: 'int',
+      typeDescription: 'int | None',
+      description: 'Height of the window',
+      default: 600,
+    },
+    x: {
+      type: 'int',
+      typeDescription: 'int | None',
+      description: 'X position of the window',
+      default: 200,
+    },
+    y: {
+      type: 'int',
+      typeDescription: 'int | None',
+      description: 'Y position of the window',
+      default: 200,
+    },
+    frame: {
+      type: 'bool',
+      typeDescription: 'bool | None',
+      description: 'Whether the window has a visible frame',
+      default: 'True',
+    },
+    context_menu: {
+      type: 'bool',
+      typeDescription: 'bool | None',
+      description: 'Whether to enable right-click context menu',
+      default: 'False',
+    },
+    dev_tools: {
+      type: 'bool',
+      typeDescription: 'bool | None',
+      description: 'Whether to enable developer tools',
+      default: 'False',
+    },
+    transparent: {
+      type: 'bool',
+      typeDescription: 'bool | None',
+      description: 'Whether the window is transparent',
+      default: 'False',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='BrowserWindow'
+  description='The created browser window instance'
+  link='./browserwindow'
+/>
+
+---
+
+### <span className='font-mono bg-primary/10 px-2 py-1 rounded text-primary'>get_windows</span>
+
+Returns a dictionary of all browser windows.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="Your Window Title")
+
+########## Usage ##########
+
+windows = app.get_windows()
+
+print(windows["your-window-id"].get_title()) # "Your Window Title"
+```
+
+**Returns**
+
+<Returns
+  type='Dict[str, BrowserWindow]'
+  description='Dictionary of all windows.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_window_by_id</span>
+
+Returns the window with the given ID.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="Your Window Title")
+
+########## Usage ##########
+
+window_by_id = app.get_window_by_id(window.get_id()) # BrowserWindow instance
+
+# window == window_by_id : same instance
+# you can use this to get the window instance by id for multi window application
+
+print(window_by_id.get_title()) # "Your Window Title"
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    window_id: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'ID of the window to retrieve.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='Optional[BrowserWindow]' description='Window object or None.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">show_main_window</span>
+
+Shows and focuses the first window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="Your Window Title")
+
+########## Usage ##########
+
+app.show_main_window() # main window is the first window that was created
+```
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">focus_main_window</span>
+
+Focuses the first window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="Your Window Title")
+
+########## Usage ##########
+
+app.focus_main_window() # main window is the first window that was created
+```
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">show_and_focus_main_window</span>
+
+Shows and focuses the first window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="Your Window Title")
+
+########## Usage ##########
+
+app.show_and_focus_main_window() # main window is the first window that was created
+```
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">close_all_windows</span>
+
+Closes all windows.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="Your Window Title")
+
+########## Usage ##########
+
+app.close_all_windows() # close all windows
+```
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">quit</span>
+
+Quits the application.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.quit() # quit the application
+```
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+## Application Icon
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_icon</span>
+
+Dynamically sets the application's icon.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_icon("icon.png") # set the application icon
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    icon_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the icon file.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+---
+
+## Tray System
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_tray_icon</span>
+
+Dynamically sets the tray icon.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_tray_icon("icon.png") # set the tray icon
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    tray_icon_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the tray icon file.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_tray_menu_items</span>
+
+Dynamically sets the tray menu items.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_tray_menu_items([
+    {"label": "Open", "callback": lambda: app.show_main_window()},
+    {"label": "Quit", "callback": app.quit}
+])
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    tray_menu_items: {
+      type: 'List[Dict[str, Union[str, Callable]]]',
+      typeDescription: 'List[Dict[str, Union[str, Callable]]]',
+      description: 'Menu items to add to the tray context menu.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_tray_actions</span>
+
+Dynamically sets the actions for tray icon activation.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_tray_actions({TrayEvent.DoubleClick: lambda: app.show_main_window()})
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    actions: {
+      type: 'Dict[TrayEvent, Callable]',
+      typeDescription: 'Dict[TrayEvent, Callable]',
+      description:
+        'Dictionary with TrayEvent enum values as keys and corresponding callback functions as values.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_tray_icon_animation</span>
+
+Dynamically sets and starts the animation for the tray icon.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_tray_icon_animation(
+    [
+        'frame1.png',
+        'frame2.png',
+        'frame3.png',
+    ],
+    100,
+)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    icon_frames: {
+      type: 'List[str]',
+      typeDescription: 'List[str]',
+      description: 'List of animation frame image paths.',
+      required: true,
+    },
+    interval: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Frame interval in milliseconds.',
+      default: 200,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_tray_tooltip</span>
+
+Dynamically sets the tooltip for the tray icon.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_tray_tooltip('Pyloid is running')
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    message: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'New tooltip message.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+---
+
+## Notification
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">show_notification</span>
+
+Displays a notification in the system tray.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.show_notification("Hello", "This is a notification.")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    title: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Title of the notification.',
+      required: true,
+    },
+    message: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Message of the notification.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' />
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_notification_callback</span>
+
+Sets the callback function to be called when a notification is clicked.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+def on_notification_click():
+    print("Notification clicked")
+
+app.set_notification_callback(on_notification_click)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    callback: {
+      type: 'Callable[[str], None]',
+      typeDescription: 'Callable[[str], None]',
+      description:
+        'Callback function to be called when a notification is clicked.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+---
+
+## Clipboard
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_clipboard_text</span>
+
+Copies text to the clipboard.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_clipboard_text("Copied text")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    text: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Text to copy to clipboard.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_clipboard_text</span>
+
+You can use this function to retrieve the text currently on the clipboard.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+text = app.get_clipboard_text()
+
+print(text) # "Copied text"
+```
+
+**Returns**
+
+<Returns type='str' description='Clipboard text.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_clipboard_image</span>
+
+Copies an image to the clipboard.
+
+This function can accept not only image file paths but also byte data or `os.PathLike` objects.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_clipboard_image("image.png")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    image: {
+      type: 'Union[str, bytes, os.PathLike]',
+      typeDescription: 'Union[str, bytes, os.PathLike]',
+      description: 'Image file path or data.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_clipboard_image</span>
+
+You can use this function to retrieve the image currently on the clipboard. The returned image is of [`QImage`](https://doc.qt.io/qtforpython-6/PySide6/QtGui/QImage.html) type. If there's no image on the clipboard, it returns None.
+
+With the [`QImage`](https://doc.qt.io/qtforpython-6/PySide6/QtGui/QImage.html) object, you can perform various operations such as image processing, display, saving, etc.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+img = app.get_clipboard_image()
+
+print(img) # QImage object
+```
+
+**Returns**
+
+<Returns
+  type='Optional[QImage]'
+  description='Clipboard image object or None'
+  link='https://doc.qt.io/qtforpython-6/PySide6/QtGui/QImage.html'
+/>
+
+---
+
+## Monitor
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_all_monitors</span>
+
+Returns information about all connected monitors.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+monitors = app.get_all_monitors()
+for monitor in monitors:
+    print(monitor.info())
+```
+
+**Returns**
+
+<Returns
+  type='List[Monitor]'
+  description='List containing monitor information.'
+  link='./monitor'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_primary_monitor</span>
+
+Returns information about the primary monitor.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+primary_monitor = app.get_primary_monitor()
+print(primary_monitor.info())
+```
+
+**Returns**
+
+<Returns
+  type='Monitor'
+  description='Primary monitor information.'
+  link='./monitor'
+/>
+
+---
+
+## Autostart
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_auto_start</span>
+
+Sets the application to start automatically at system startup. more guide [here](/docs/guides/autostart).
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_auto_start(True) # enable auto-start
+app.set_auto_start(False) # disable auto-start
+
+# in production, it will return True or False
+# in development, it will return None and do nothing
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    enable: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to enable auto-start.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Union[bool, None]'
+  description='True if enabled, False if disabled, None if unsupported.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">is_auto_start</span>
+
+Checks if the application is set to start automatically at system startup. more guide [here](/docs/guides/autostart).
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+print(app.is_auto_start()) # True or False
+```
+
+**Returns**
+
+<Returns type='bool' description='Whether auto-start is active.' />
+
+---
+
+## File Watcher
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">watch_file</span>
+
+Adds a file to the watch list.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+result = app.watch_file("path/to/file.txt")
+
+print(result) # True if successful
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the file to watch.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">watch_directory</span>
+
+Adds a directory to the watch list.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+result = app.watch_directory("path/to/directory")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the directory to watch.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">stop_watching</span>
+
+Removes a file or directory from the watch list.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+result = app.stop_watching("path/to/watch")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to stop watching.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_watched_paths</span>
+
+Returns all currently watched paths.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+paths = app.get_watched_paths()
+```
+
+**Returns**
+
+<Returns
+  type='List[str]'
+  description='Watched paths or files or directories.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_watched_files</span>
+
+Returns all currently watched files.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+files = app.get_watched_files()
+```
+
+**Returns**
+
+<Returns type='List[str]' description='Watched file paths.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_watched_directories</span>
+
+Returns all currently watched directories.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+directories = app.get_watched_directories()
+```
+
+**Returns**
+
+<Returns type='List[str]' description='Watched directory paths.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">remove_all_watched_paths</span>
+
+Removes all paths from the watch list.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.remove_all_watched_paths()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_file_change_callback</span>
+
+Sets the callback function to be called when a file is changed.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_file_change_callback(lambda path: print(f"File changed: {path}"))
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    callback: {
+      type: 'Callable[[str], None]',
+      typeDescription: 'Callable[[str], None]',
+      description: 'Callback function called when a file changes.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_directory_change_callback</span>
+
+Sets the callback function to be called when a directory is changed.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.set_directory_change_callback(lambda path: print(f"Directory changed: {path}"))
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    callback: {
+      type: 'Callable[[str], None]',
+      typeDescription: 'Callable[[str], None]',
+      description: 'Callback function called when a directory changes.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' />
+
+---
+
+## File Dialogs
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">open_file_dialog</span>
+
+Opens a dialog to open a file. This functionality is implemented using PySide6's `QFileDialog` class.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+file_path = app.open_file_dialog(dir="/home/user", filter="Text Files (*.txt);;All Files (*)")
+if file_path:
+    print("Selected file:", file_path)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    dir: {
+      type: 'Optional[str]',
+      typeDescription: 'Optional[str]',
+      description: 'The directory where the dialog will initially open. Default is the current working directory.',
+    },
+    filter: {
+      type: 'Optional[str]',
+      typeDescription: 'Optional[str]',
+      description: 'A string specifying the selectable file types. For example, it can be used like "Text Files (*.txt);;All Files (*)".',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='Optional[str]' description='Returns the path of the selected file. Returns None if no file is selected.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">save_file_dialog</span>
+
+Opens a dialog to save a file. This functionality is implemented using PySide6's `QFileDialog` class.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+file_path = app.save_file_dialog(dir="/home/user", filter="Text Files (*.txt);;All Files (*)")
+if file_path:
+    print("File will be saved to:", file_path)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    dir: {
+      type: 'Optional[str]',
+      typeDescription: 'Optional[str]',
+      description: 'The directory where the dialog will initially open. Default is the current working directory.',
+    },
+    filter: {
+      type: 'Optional[str]',
+      typeDescription: 'Optional[str]',
+      description: 'A string specifying the savable file types. For example, it can be used like "Text Files (*.txt);;All Files (*)".',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='Optional[str]' description='Returns the path of the selected file. Returns None if no file is selected.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">select_directory_dialog</span>
+
+Opens a dialog to select a directory. This functionality is implemented using PySide6's `QFileDialog` class.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+directory_path = app.select_directory_dialog(dir="/home/user")
+if directory_path:
+    print("Selected directory:", directory_path)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    dir: {
+      type: 'Optional[str]',
+      typeDescription: 'Optional[str]',
+      description: 'The directory where the dialog will initially open. Default is the current working directory.',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='Optional[str]' description='Returns the path of the selected directory. Returns None if no directory is selected.' />
+
+---
+
+## Platform Dirs
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_data_dir</span>
+
+Returns the user data directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+data_dir = app.user_data_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user data directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">site_data_dir</span>
+
+Returns the site data directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+data_dir = app.site_data_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the site data directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_cache_dir</span>
+
+Returns the user cache directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+cache_dir = app.user_cache_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user cache directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_log_dir</span>
+
+Returns the user log directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+log_dir = app.user_log_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user log directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_documents_dir</span>
+
+Returns the user documents directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+docs_dir = app.user_documents_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user documents directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_downloads_dir</span>
+
+Returns the user downloads directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+downloads_dir = app.user_downloads_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user downloads directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_pictures_dir</span>
+
+Returns the user pictures directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+pictures_dir = app.user_pictures_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user pictures directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_videos_dir</span>
+
+Returns the user videos directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+videos_dir = app.user_videos_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user videos directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_music_dir</span>
+
+Returns the user music directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+music_dir = app.user_music_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user music directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_desktop_dir</span>
+
+Returns the user desktop directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+desktop_dir = app.user_desktop_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user desktop directory.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">user_runtime_dir</span>
+
+Returns the user runtime directory path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+runtime_dir = app.user_runtime_dir()
+```
+
+**Returns**
+
+<Returns type='str' description='Path to the user runtime directory.' />
+
+---
+
+## Store API
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">store</span>
+
+Returns a Store instance for the given path.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+store = app.store("settings.json")
+store.set("theme", "dark")
+print(store.get("theme"))
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'File name of the store.',
+      required: true,
+    },
+    user_data_dir: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to place the file inside the user data directory.',
+      default: 'True',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Store'
+  description='Store object supporting .set() and .get().'
+  link='./store'
+/>
+
+---
+
+## Run the App
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">run</span>
+
+Runs the application event loop.
+
+```python
+from pyloid import Pyloid
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+app.run()
+```
+
+**Returns**
+
+<Returns type='None' description='Starts the application event loop.' />

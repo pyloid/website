@@ -1,0 +1,283 @@
+---
+title: build.py
+---
+
+Build utilities for creating distributable Pyloid applications using PyInstaller with advanced optimization features.
+
+---
+
+## Building Applications
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">pyinstaller</span>
+
+Builds a PyInstaller application for Pyloid with rich terminal interface and real-time progress monitoring.
+
+<Callout type="info">
+For complete PyInstaller options, see the [official PyInstaller documentation](https://pyinstaller.org/en/stable/usage.html#options).
+</Callout>
+
+```python
+from pyloid_builder.pyinstaller import pyinstaller
+
+########## Usage ##########
+
+# Basic build
+pyinstaller('main.py', ['--onedir', '--windowed'])
+
+# Advanced build with multiple options
+pyinstaller(
+    'main.py',
+    [
+        '--name=MyApp',
+        '--onedir',
+        '--windowed',
+        '--icon=icon.ico',
+        '--add-data=assets:assets',
+    ]
+)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    scriptname: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The name of the script to build.',
+      required: true,
+    },
+    options: {
+      type: 'List[str]',
+      typeDescription: 'List[str]',
+      description: 'The options to pass to PyInstaller. See PyInstaller documentation for available options.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='Executes PyInstaller and displays build progress.' />
+
+## Optimizing Builds
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">optimize</span>
+
+Optimizes PyInstaller build output by removing unnecessary files to reduce application size.
+
+This function is only available for --onedir builds.
+
+```python
+from pyloid_builder.optimize import optimize
+
+########## Usage ##########
+
+# Remove specific files and folders
+optimize('dist/MyApp', [
+    'tcl',           # Remove entire tcl folder
+    'tk',            # Remove entire tk folder
+    '*.dll',         # Remove all DLL files (wildcard)
+    'libEGL.dll',    # Remove specific file
+])
+
+# Optimize with patterns
+optimize('dist/MyApp', [
+    'Qt5*.dll',      # Remove Qt5 DLLs
+    'lib*.so*',      # Remove library files
+    'test_*',        # Remove test files
+])
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the application build output directory.',
+      required: true,
+    },
+    remove_list: {
+      type: 'List[str]',
+      typeDescription: 'List[str]',
+      description: 'List of files or folders to remove. Supports wildcards (*, ?).',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='Removes specified files and displays optimization results.' />
+
+## Build Scripts
+
+### Basic Build Script
+
+```python tab="build.py"
+from pyloid_builder.pyinstaller import pyinstaller
+from pyloid.utils import get_platform
+
+# Configuration
+main_script = './src-pyloid/main.py'
+name = 'pyloid-app'
+dist_path = './dist'
+work_path = './build'
+
+# Platform-specific icon
+if get_platform() == 'windows':
+	icon = './src-pyloid/icons/icon.ico'
+elif get_platform() == 'macos':
+	icon = './src-pyloid/icons/icon.icns'
+else:
+	icon = './src-pyloid/icons/icon.png'
+
+
+if __name__ == '__main__':
+    # Step 1: Build with PyInstaller
+	pyinstaller(
+		main_script,
+		[
+			f'--name={name}',
+			f'--distpath={dist_path}',
+			f'--workpath={work_path}',
+			'--clean',
+			'--noconfirm',
+			'--onedir',
+			'--windowed',
+			'--add-data=./src-pyloid/icons/:./src-pyloid/icons/',
+			'--add-data=./dist-front/:./dist-front/',
+			f'--icon={icon}',
+		],
+	)
+```
+
+### Build with Optimization
+
+```python tab="build.py"
+from pyloid_builder.pyinstaller import pyinstaller
+from pyloid_builder.optimize import optimize
+from pyloid.utils import get_platform
+
+# Configuration
+main_script = './src/main.py'
+app_name = 'MyApp'
+dist_path = './dist'
+work_path = './build'
+
+# Platform-specific icon
+if get_platform() == 'windows':
+    icon = './assets/icon.ico'
+elif get_platform() == 'macos':
+    icon = './assets/icon.icns'
+else:
+    icon = './assets/icon.png'
+
+if __name__ == '__main__':
+    # Step 1: Build with PyInstaller
+    pyinstaller(
+        main_script,
+        [
+            f'--name={app_name}',
+            f'--distpath={dist_path}',
+            f'--workpath={work_path}',
+            '--clean',
+            '--noconfirm',
+            '--onedir',
+            '--windowed',
+            f'--icon={icon}',
+            '--add-data=./assets:assets',
+        ],
+    )
+
+    # Step 2: Optimize build output
+    optimize(
+        f'{dist_path}/{app_name}',
+        [
+            'tcl',           # Remove TCL/TK folders
+            'tk',
+            'Qt5*.dll',      # Remove unnecessary Qt DLLs
+            '*.tmp',         # Remove temporary files
+            'test_*',        # Remove test files
+        ],
+    )
+
+    print(f"✅ {app_name} built and optimized successfully!")
+```
+
+## Build Options
+
+### Common PyInstaller Options
+
+| Option | Description |
+|--------|-------------|
+| `--onedir` | Create a single directory bundle (recommended) |
+| `--windowed` | Create a windowed application (no console) |
+| `--console` | Create a console application |
+| `--icon=file.ico` | Set application icon |
+| `--name=AppName` | Set application name |
+| `--clean` | Clean cache and temporary files |
+| `--noconfirm` | Replace output directory without confirmation |
+| `--add-data=src:dst` | Add additional data files |
+| `--hidden-import=module` | Include hidden imports |
+
+### Optimization Targets
+
+Common files and folders to remove during optimization:
+
+```python
+optimization_targets = [
+    # Python standard library components
+    'tcl', 'tk', 'lib2to3', 'distutils',
+
+    # Unnecessary Qt components
+    'Qt5Qml.dll', 'Qt5Quick.dll', 'Qt5Network.dll',
+
+    # Development and test files
+    '*.pyc', '*.pyo', '__pycache__', 'test_*',
+
+    # Platform-specific files
+    '*.pdb', '*.lib', '*.exp',  # Windows debug files
+]
+```
+
+### Running Builds
+
+```bash tab="npm"
+npm run build
+```
+
+```bash tab="pnpm"
+pnpm run build
+```
+
+```bash tab="yarn"
+yarn run build
+```
+
+```bash tab="bun"
+bun run build
+```
+
+
+
+## Troubleshooting
+
+### Common Issues
+
+**Build fails with import errors:**
+- Use `--hidden-import` to include missing modules
+- Check that all dependencies are installed
+
+**Application won't start:**
+- Ensure all data files are included with `--add-data`
+- Check that the main script path is correct
+
+**Large bundle size:**
+- Use the `optimize` function to remove unnecessary files
+
+**Icon not showing:**
+- Ensure the icon path is correct and the file exists
+- Use platform-appropriate icon formats (.ico for Windows, .icns for macOS)

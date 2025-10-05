@@ -1,0 +1,1362 @@
+---
+title: BrowserWindow
+---
+
+The BrowserWindow class is designed to manage browser windows within a pyloid application
+
+The BrowserWindow object is created through the <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary"><Link href="./pyloid#create_window">create_window</Link></span> method of the <Link href="./pyloid">Pyloid</Link> class
+
+---
+
+## Window Content
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">load_file</span>
+
+Loads a local HTML file into the web view.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.load_file("path/to/index.html")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    file_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the HTML file to load.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">load_url</span>
+
+Sets the URL of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.load_url("https://example.com")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    url: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'URL to load.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">load_html</span>
+
+Loads HTML content directly into the web view.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+html_content = "<html><body><h1>Hello Pyloid!</h1></body></html>"
+window.load_html(html_content)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    html_content: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The HTML content to be loaded.',
+      required: true,
+    },
+    base_url: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The base URL to use for resolving relative URLs.',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+## Window Properties
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_title</span>
+
+Sets the title of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_title("New Title")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    title: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'New window title.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_size</span>
+
+Sets the size of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_size(800, 600)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    width: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'New window width.',
+      required: true,
+    },
+    height: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'New window height.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_position</span>
+
+Sets the position of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_position(100, 100)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    x: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'New x-coordinate.',
+      required: true,
+    },
+    y: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'New y-coordinate.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_position_by_anchor</span>
+
+Positions the window at a specific location on the screen.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_position_by_anchor("center")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    anchor: {
+      type: 'str',
+      typeDescription:
+        '"center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right"',
+      description:
+        'The anchor point indicating where to position the window. Possible values: "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left", "bottom-right".',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_frame</span>
+
+Sets the frame of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_frame(True)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    frame: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to show the frame.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_context_menu</span>
+
+Sets the context menu of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_context_menu(True)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    context_menu: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to enable the context menu.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_dev_tools</span>
+
+Sets the developer tools of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_dev_tools(True)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    enable: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to enable developer tools.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">open_dev_tools</span>
+
+Opens the developer tools window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.open_dev_tools()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_window_properties</span>
+
+Returns the properties of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+properties = window.get_window_properties()
+print(properties)
+```
+
+**Returns**
+
+<Returns
+  type='dict'
+  description='A dictionary containing the window properties.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_id</span>
+
+Returns the ID of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window_id = window.get_id()
+print(window_id)
+```
+
+**Returns**
+
+<Returns type='str' description='The window ID.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_transparent</span>
+
+Returns the transparency state of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+is_transparent = window.get_transparent()
+print(f"Is transparent: {is_transparent}")
+```
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='True if the window is set to be transparent, False otherwise.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_size</span>
+
+Returns the size of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+size = window.get_size()
+print(f"Size: {size['width']}x{size['height']}")
+```
+
+**Returns**
+
+<Returns
+  type='Dict[str, int]'
+  description="Dictionary containing the width and height of the window with keys 'width' and 'height'."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_position</span>
+
+Returns the position of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+position = window.get_position()
+print(f"Position: ({position['x']}, {position['y']})")
+```
+
+**Returns**
+
+<Returns
+  type='Dict[str, int]'
+  description="Dictionary containing the x and y coordinates of the window with keys 'x' and 'y'."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_title</span>
+
+Returns the title of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+title = window.get_title()
+print(f"Title: {title}")
+```
+
+**Returns**
+
+<Returns type='str' description='The title of the window.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_url</span>
+
+Returns the URL of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+url = window.get_url()
+print(f"URL: {url}")
+```
+
+**Returns**
+
+<Returns type='str' description='The URL currently loaded in the window.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_visible</span>
+
+Returns the visibility of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+is_visible = window.get_visible()
+print(f"Is visible: {is_visible}")
+```
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='True if the window is visible, False otherwise.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_frame</span>
+
+Returns the frame enabled state of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+has_frame = window.get_frame()
+print(f"Has frame: {has_frame}")
+```
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='True if the window has a frame, False otherwise.'
+/>
+
+---
+
+## Window Visibility
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">hide</span>
+
+Hides the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.hide()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">show</span>
+
+Shows the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.show()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">focus</span>
+
+Focuses the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.focus()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">show_and_focus</span>
+
+Shows and focuses the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.show_and_focus()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">close</span>
+
+Closes the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.close()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+## Window State
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">toggle_fullscreen</span>
+
+Toggles the fullscreen mode of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.toggle_fullscreen()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">minimize</span>
+
+Minimizes the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.minimize()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">maximize</span>
+
+Maximizes the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.maximize()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">unmaximize</span>
+
+Restores the window from maximized state.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.unmaximize()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">fullscreen</span>
+
+Enters fullscreen mode.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.fullscreen()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">toggle_maximize</span>
+
+Toggles the maximized state of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.toggle_maximize()
+```
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">is_fullscreen</span>
+
+Returns True if the window is fullscreen.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+is_fullscreen = window.is_fullscreen()
+print(f"Is fullscreen: {is_fullscreen}")
+```
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='True if the window is in fullscreen mode, False otherwise.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">is_maximized</span>
+
+Returns True if the window is maximized.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+is_maximized = window.is_maximized()
+print(f"Is maximized: {is_maximized}")
+```
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='True if the window is maximized, False otherwise.'
+/>
+
+---
+
+## Window Capture
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">capture</span>
+
+Captures the current window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+image_path = window.capture("screenshot.png")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    save_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to save the captured image.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Optional[str]'
+  description='Path to the saved image or None if failed.'
+/>
+
+---
+
+## Keyboard Shortcuts
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">add_shortcut</span>
+
+Adds a keyboard shortcut to the window if it does not already exist.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+def on_shortcut():
+    print("Shortcut pressed!")
+
+shortcut = window.add_shortcut("Ctrl+C", on_shortcut)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    key_sequence: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Shortcut key sequence (e.g., "Ctrl+C").',
+      required: true,
+    },
+    callback: {
+      type: 'Callable',
+      typeDescription: 'Callable',
+      description: 'Function to execute when the shortcut is pressed.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='QShortcut'
+  description='The created QShortcut object.'
+  link='https://doc.qt.io/qtforpython-6/PySide6/QtGui/QShortcut.html'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">remove_shortcut</span>
+
+Removes a keyboard shortcut from the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.remove_shortcut("Ctrl+C")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    key_sequence: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Shortcut key sequence to remove.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_all_shortcuts</span>
+
+Returns all registered shortcuts in the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+shortcuts = window.get_all_shortcuts()
+print(shortcuts)
+```
+
+**Returns**
+
+<Returns
+  type='dict'
+  description='A dictionary containing shortcut sequences and their QShortcut objects.'
+/>
+
+---
+
+## Events
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">invoke</span>
+
+Invokes an event to the JavaScript side. [Event](/docs/api/pyloid-js/event)
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.invoke("customEvent", {"message": "Hello, Pyloid!"})
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    event_name: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Name of the event.',
+      required: true,
+    },
+    data: {
+      type: 'Optional[Dict]',
+      typeDescription: 'Optional[Dict]',
+      description: 'Data to be sent with the event.',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+## Window Resizing
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_resizable</span>
+
+Sets whether the window can be resized by the user.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_resizable(True)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    resizable: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description:
+        'True to make the window resizable, False to make it fixed size.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_minimum_size</span>
+
+Sets the minimum size of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_minimum_size(400, 300)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    min_width: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Minimum width of the window.',
+      required: true,
+    },
+    min_height: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Minimum height of the window.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_maximum_size</span>
+
+Sets the maximum size of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+window.set_maximum_size(1024, 768)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    max_width: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Maximum width of the window.',
+      required: true,
+    },
+    max_height: {
+      type: 'int',
+      typeDescription: 'int',
+      description: 'Maximum height of the window.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_minimum_size</span>
+
+Returns the minimum size of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+min_size = window.get_minimum_size()
+print(f"Minimum size: {min_size['width']}x{min_size['height']}")
+```
+
+**Returns**
+
+<Returns
+  type='Dict[str, int]'
+  description="Dictionary containing the minimum width and height of the window with keys 'width' and 'height'."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_maximum_size</span>
+
+Returns the maximum size of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+max_size = window.get_maximum_size()
+print(f"Maximum size: {max_size['width']}x{max_size['height']}")
+```
+
+**Returns**
+
+<Returns
+  type='Dict[str, int]'
+  description="Dictionary containing the maximum width and height of the window with keys 'width' and 'height'."
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_resizable</span>
+
+Returns the resizability of the window.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+is_resizable = window.get_resizable()
+print(f"Is resizable: {is_resizable}")
+```
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='True if the window is resizable, False otherwise.'
+/>
+
+---
+
+## Splash Screen
+
+Provides splash screen functionality displayed during application loading. Supports both static images and animated GIFs with customizable positioning and behavior.
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_static_image_splash_screen</span>
+
+Displays a static image as a splash screen during window loading. The splash screen automatically positions itself and can be configured to close on page load or stay visible until manually closed.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+########## Usage ##########
+
+# Basic usage with default settings
+window.set_static_image_splash_screen("assets/loading.png")
+
+# Advanced configuration
+window.set_static_image_splash_screen(
+    image_path="assets/loading.png",
+    close_on_load=True,
+    stay_on_top=True,
+    clickable=True,
+    position="center"
+)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    image_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the image file.',
+      required: true,
+    },
+    close_on_load: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to close the splash screen when the page loads.',
+      default: 'True',
+    },
+    stay_on_top: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description:
+        'Whether the splash screen should stay on top of other windows.',
+      default: 'True',
+    },
+    clickable: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether the splash screen can be clicked to close.',
+      default: 'True',
+    },
+    position: {
+      type: 'str',
+      typeDescription: 'str',
+      description:
+        'Position of the splash screen. Options: "center", "top-left", "top-right", "bottom-left", "bottom-right".',
+      default: '"center"',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None' description='' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_gif_splash_screen</span>
+
+Displays an animated GIF as a splash screen during window loading. Provides visual feedback during long loading operations with smooth animations and customizable display options.
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+########## Usage ##########
+
+# Basic usage with default settings
+window.set_gif_splash_screen("assets/loading.gif")
+
+# Advanced configuration for loading screens
+window.set_gif_splash_screen(
+    gif_path="assets/loading.gif",
+    close_on_load=True,
+    stay_on_top=True,
+    clickable=True,
+    position="center"
+)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    gif_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the GIF file.',
+      required: true,
+    },
+    close_on_load: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to close the splash screen when the page loads.',
+      default: 'True',
+    },
+    stay_on_top: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description:
+        'Whether the splash screen should stay on top of other windows.',
+      default: 'True',
+    },
+    clickable: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether the splash screen can be clicked to close.',
+      default: 'True',
+    },
+    position: {
+      type: 'str',
+      typeDescription: 'str',
+      description:
+        'Position of the splash screen. Options: "center", "top-left", "top-right", "bottom-left", "bottom-right".',
+      default: '"center"',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='None'/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">close_splash_screen</span>
+
+Manually closes the splash screen if it is currently displayed. Useful when you want to control the timing of splash screen dismissal independently of page load events.
+
+```python
+from pyloid import Pyloid
+from pyloid.timer import PyloidTimer
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+window = app.create_window(title="My Window")
+
+########## Usage ##########
+
+# Manual closure after specific operations
+window.set_static_image_splash_screen("assets/loading.png")
+
+# Close splash screen and show main window after 3 seconds
+timer_manager = PyloidTimer()
+timer_manager.start_single_shot_timer(3000, lambda: (
+    window.close_splash_screen(),
+    window.show_and_focus()
+))
+
+# Or close immediately when ready
+window.close_splash_screen()
+```
+
+**Returns**
+
+<Returns type='None' />

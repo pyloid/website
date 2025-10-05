@@ -1,0 +1,255 @@
+---
+title: Store
+---
+
+The `Store` class is a lightweight key-value database used by creating it via `app.store("store.json")` from a Pyloid app instance. You can store any Python object that is JSON serializable, and the data is persistently managed as a database file.
+
+---
+
+## Creating a Store
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">store</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+store = app.store("store.json")
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the database file.',
+      required: true,
+    },
+    user_data_dir: {
+      type: 'bool',
+      typeDescription: 'bool',
+      description: 'Whether to place the file inside the user data directory.',
+      default: 'True',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='Store' description='Store instance for key-value storage.' />
+
+---
+
+## Data Operations
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+store = app.store("store.json")
+
+store.set("user", {"name": "Hong Gil-dong", "age": 30})
+user = store.get("user")
+print(user)  # {'name': 'Hong Gil-dong', 'age': 30}
+print(store.get("nonexistent_key"))  # None
+```
+
+Returns the value associated with the specified key. If the key does not exist, returns `default`.
+
+**Parameters**
+
+<TypeTable
+  type={{
+    key: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The key to retrieve.',
+      required: true,
+    },
+    default: {
+      type: 'Any',
+      typeDescription: 'Any',
+      description: 'The default value to return if the key does not exist.',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Any'
+  description='The value stored for the key, or default if not found.'
+/>
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+store = app.store("store.json")
+
+store.set("settings", {"theme": "dark", "notifications": True})
+store.set("counter", 42)
+store.set("items", ["apple", "banana", "orange"])
+```
+
+Adds or updates a key-value pair in the database. The value must be a JSON-serializable Python object.
+
+**Parameters**
+
+<TypeTable
+  type={{
+    key: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The key to store.',
+      required: true,
+    },
+    value: {
+      type: 'Any',
+      typeDescription: 'Any',
+      description: 'The value to store (must be JSON serializable).',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='Always returns True.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">remove</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+store = app.store("store.json")
+
+store.set("temp", "temporary data")
+store.remove("temp")  # True
+store.remove("nonexistent_key")  # False
+```
+
+Deletes the value associated with the specified key from the database.
+
+**Parameters**
+
+<TypeTable
+  type={{
+    key: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The key to remove.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='Returns True if the key was deleted, False if the key did not exist.'
+/>
+
+---
+
+## Bulk Operations
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">all</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+store = app.store("store.json")
+
+store.set("key1", "value1")
+store.set("key2", "value2")
+keys = store.all()
+print(keys)  # ['key1', 'key2']
+```
+
+Returns a list of all keys stored in the database.
+
+**Returns**
+
+<Returns type='List[str]' description='A list of all stored keys.' />
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">purge</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+store = app.store("store.json")
+
+store.set("key1", "value1")
+store.set("key2", "value2")
+store.purge()  # True
+print(store.all())  # []
+```
+
+Deletes all keys and values from the database.
+
+**Returns**
+
+<Returns type='bool' description='Always returns True.' />
+
+---
+
+## Persistence
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">save</span>
+
+```python
+from pyloid import Pyloid
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+store = app.store("store.json")
+
+store.set("key", "value")
+store.save()  # True
+```
+
+Saves the current state of the database to the file. You can specify orjson serialization options with the `option` parameter.
+
+**Parameters**
+
+<TypeTable
+  type={{
+    option: {
+      type: 'Optional[int]',
+      typeDescription: 'Optional[int]',
+      description: 'orjson.OPT_* flag for serialization options.',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='Returns True if saving was successful, False otherwise.'
+/>
+
+---
+
+## Summary
+
+- **Store** is created from a Pyloid app instance using `app.store("store.json")`.
+- You can store any Python object that is JSON serializable, such as strings, numbers, lists, and dictionaries.
+- Main methods: `get`, `set`, `remove`, `all`, `purge`, `save`
+- Data is persistently managed as a database file.

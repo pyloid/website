@@ -1,0 +1,176 @@
+---
+title: PyloidRPC
+---
+
+Pyloid is a Python-based desktop app framework that allows easy function calls between the frontend (web) and backend (Python) through `PyloidRPC`
+
+## Initialization
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">PyloidRPC</span>
+
+The main RPC class that manages method registration and handles RPC calls.
+
+```python
+from pyloid.rpc import PyloidRPC
+
+server = PyloidRPC()
+```
+
+---
+
+## Method Decorator
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">method</span>
+
+The decorator to register a method to the RPC server.
+
+```python
+@server.method()
+def greet(name: str):
+    return f"Hello, {name}!"
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    name: {
+      type: 'str',
+      typeDescription: 'Optional[str]',
+      description:
+        'Custom name for the RPC method. If not provided, the function name will be used.',
+    },
+  }}
+/>
+
+---
+
+## RPCContext
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">RPCContext</span>
+
+The `RPCContext` class provides access to the current application state when a parameter named `ctx` is present in your method signature.
+
+**Properties**
+
+- `RPCContext.pyloid`: The Pyloid application instance
+- `RPCContext.window`: The current browser window instance
+
+---
+
+## Basic Usage
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">Simple RPC Method</span>
+
+```python
+from pyloid.rpc import PyloidRPC
+
+server = PyloidRPC()
+
+@server.method()
+async def greet(name: str):
+    return f"Hello, {name}!"
+```
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">RPC Method with Context</span>
+
+```python
+from pyloid.rpc import PyloidRPC, RPCContext
+
+server = PyloidRPC()
+
+@server.method()
+async def create_google_window(ctx: RPCContext):
+    window = ctx.pyloid.create_window(title="Google")
+    window.load_url("https://www.google.com")
+    window.show_and_focus()
+```
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">Toggle Fullscreen Example</span>
+
+```python
+from pyloid.rpc import PyloidRPC, RPCContext
+
+server = PyloidRPC()
+
+@server.method()
+async def toggle_fullscreen(ctx: RPCContext):
+    # Access the current window through context
+    is_fullscreen = ctx.window.is_fullscreen()
+    ctx.window.set_fullscreen(not is_fullscreen)
+    return not is_fullscreen
+```
+
+---
+
+## Error Handling
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">RPCError</span>
+
+Pyloid provides a custom `RPCError` class for handling application-specific errors:
+
+```python
+from pyloid.rpc import PyloidRPC, RPCError
+
+server = PyloidRPC()
+
+@server.method()
+async def divide(a: float, b: float):
+    if b == 0:
+        # Create a custom error with code and message
+        raise RPCError("Division by zero is not allowed", code=-32000)
+    return a / b
+```
+
+---
+
+## Connecting RPC to Windows
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">Window Integration</span>
+
+```python
+from pyloid import Pyloid
+from pyloid.rpc import PyloidRPC
+
+# Create an RPC server instance
+server = PyloidRPC()
+
+@server.method()
+async def greet(name: str):
+    return f"Hello, {name}!"
+
+# Connect the RPC server instance
+app = Pyloid(app_name="MyApp", single_instance=True, server=server)
+```
+
+---
+
+## Frontend RPC Calls
+
+Once your RPC server is running, you can call your methods from the frontend
+
+```javascript
+import { rpc } from 'pyloid-js';
+
+// Call the 'greet' RPC function to receive a greeting.
+rpc
+  .call('greet', { name: 'Alice' })
+  .then((response) => {
+    console.log(response); // Outputs "Hello, Alice!"
+  })
+  .catch((error) => {
+    console.error('Error occurred during RPC call:', error);
+  });
+```
+
+---
+
+## Notes
+
+- All RPC functions must be defined as async, and you can use await inside them.
+- When calling RPC functions from the frontend, simply pass the function name and parameters as they are.
+- **All GUI-related functions in Pyloid are designed to be thread-safe.** Therefore, unlike typical Python GUI frameworks, you can safely call GUI-related methods (app, window, etc.) inside RPC functions (asynchronous/other threads) even if they are not on the main thread. Without any additional synchronization or queuing, you can freely control the GUI from RPC server.

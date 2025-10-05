@@ -1,0 +1,65 @@
+---
+title: RPC
+---
+
+<Callout type='info'>
+  For <span className='text-primary'>PyloidRPC backend</span>, use this
+  [rpc](./rpc) from `pyloid-js`.
+</Callout>
+
+<Callout type='warning'>
+  For <span className='text-primary'>FastAPI or other HTTP backends</span>, use
+  [fetch](./fetch) instead.
+</Callout>
+
+### Frontend
+
+Calling RPC Functions from JavaScript
+
+```javascript
+import { rpc } from 'pyloid-js';
+
+// Call the 'greet' RPC function to receive a greeting.
+rpc
+  .call('greet', { name: 'Alice' })
+  .then((response) => {
+    console.log(response); // Outputs "Hello, Alice!"
+  })
+  .catch((error) => {
+    console.error('Error occurred during RPC call:', error);
+  });
+```
+
+### Backend
+
+All RPC functions must be defined as asynchronous (async) functions and registered with the `method()` decorator. Additionally, if you add `ctx` [(RPCContext)](/docs/api/pyloid/pyloidrpc#rpccontext) as the first argument, you can access the current app and window objects.
+
+```python tab="src-pyloid/server.py"
+from pyloid.rpc import PyloidRPC, RPCContext
+
+server = PyloidRPC()
+
+@server.method()
+async def greet(name: str):
+    return f"Hello, {name}!"
+
+@server.method()
+async def create_window(ctx: RPCContext):
+    win = ctx.pyloid.create_window(title="Google Window")
+    win.load_url("https://www.google.com")
+    win.show_and_focus()
+```
+
+```python tab="src-pyloid/main.py"
+from pyloid import Pyloid
+from server import server
+
+app = Pyloid(app_name="Pyloid-App", single_instance=True, server=server) # server is the PyloidRPC instance
+
+window = app.create_window(title="Pyloid Browser-dev")
+window.load_url("http://localhost:5173") # Load the local development frontend url
+
+window.show_and_focus()
+
+app.run()
+```

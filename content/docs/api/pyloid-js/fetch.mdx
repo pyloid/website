@@ -1,0 +1,121 @@
+---
+title: Fetch
+---
+
+<Callout type='info'>
+  For <span className='text-primary'>FastAPI or other HTTP backends</span>, use
+  this [fetch](./fetch) from `pyloid-js`.
+</Callout>
+
+<Callout type='warning'>
+  For <span className='text-primary'>PyloidRPC backend</span>, use [rpc](./rpc)
+  instead.
+</Callout>
+
+The pyloid fetch provides automatic window ID injection and server URL resolution for seamless backend communication.
+
+## Key Features
+
+- **Automatic Window ID**: Injects `X-Pyloid-Window-Id` header for request routing
+- **Server URL Resolution**: Combines relative paths with the Pyloid server URL
+- **Drop-in Replacement**: Same API as native `fetch()` - works with any HTTP library
+- **Lazy Initialization**: Automatically waits for Pyloid to be ready
+
+## Basic Usage
+
+### Frontend
+
+```javascript
+import { fetch } from 'pyloid-js';
+
+// Fetch the 'greet' function to receive a greeting.
+fetch
+  .get(`/greet?name=Alice`)
+  .then((response) => {
+    console.log(response); // Outputs "Hello, Alice!"
+  })
+  .catch((error) => {
+    console.error('Error occurred during fetch call:', error);
+  });
+```
+
+### Backend
+
+1. Create a server instance
+2. Create a start server function
+3. Create a setup cors function
+4. Create an adapter instance and pass the start and setup cors functions
+5. Pass the adapter instance to the server parameter of the Pyloid class
+
+if you want to access the pyloid context, you can use the `adapter.get_context(window_id)` function.
+
+if you want to check if the request is a pyloid request, you can use the `adapter.is_pyloid(window_id)` function.
+
+```python tab="src-pyloid/server.py"
+from pyloid_adapter import BaseAdapter, PyloidContext
+from fastapi import FastAPI
+from fastapi import Request
+from fastapi.middleware.cors import CORSMiddleware
+
+# 1. Create a server instance
+app = FastAPI()
+
+# 2. Create a start server function
+def start(host: str, port: int):
+	import uvicorn
+	uvicorn.run(app, host=host, port=port)
+
+# 3. Create a setup cors function
+def setup_cors():
+	app.add_middleware(
+		CORSMiddleware,
+		allow_origins=['*'],
+		allow_credentials=True,
+		allow_methods=['*'],
+		allow_headers=['*'],
+	)
+
+# 4. Create an adapter instance and pass the start and setup cors functions
+adapter = BaseAdapter(start, setup_cors)
+
+
+@app.get('/greet')
+async def greet(name: str):
+	return f'Hello, {name}!'
+
+
+@app.get('/create_window')
+async def create_window(request: Request):
+	window_id = request.headers.get("X-Pyloid-Window-Id")
+ 
+	if adapter.is_pyloid(window_id):
+		print("pyloid request")
+	else:
+		print("not pyloid request")
+  
+	ctx: PyloidContext = adapter.get_context(window_id) 
+ 
+	win = ctx.pyloid.create_window(title='Google Window')
+	win.load_url('https://www.google.com')
+	win.show_and_focus()
+
+```
+
+```python tab="src-pyloid/main.py"
+from pyloid import Pyloid
+from server import adapter
+
+# 5. Pass the adapter instance to the server parameter of the Pyloid class
+app = Pyloid(app_name="Pyloid-App", single_instance=True, server=adapter)
+
+window = app.create_window(title="Pyloid Browser-dev")
+window.load_url("http://localhost:5173") # Load the local development frontend url
+
+window.show_and_focus()
+
+app.run()
+```
+
+this example is for fastapi backend.
+
+you can use any server backend.

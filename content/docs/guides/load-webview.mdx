@@ -1,0 +1,39 @@
+---
+title: Load Webview
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">load_url</span> (Load URL)
+
+```python
+app = Pyloid(app_name="Pyloid-App")
+
+window = app.create_window("Pyloid-Window")
+
+window.load_url("https://www.example.com")
+
+window.show()
+```
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">load_file</span> (Load File)
+
+```python
+app = Pyloid(app_name="Pyloid-App")
+
+window = app.create_window("Pyloid-Window")
+
+window.load_file("./index.html")
+
+window.show()
+```
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">load_html</span> (Load HTML)
+
+```python
+app = Pyloid(app_name="Pyloid-App")
+
+window = app.create_window("Pyloid-Window")
+
+window.load_html("<h1>Hello, Pyloid!</h1>")
+
+window.show()
+```

@@ -1,0 +1,75 @@
+# TrayEvent
+
+`TrayEvent` is an enumeration (Enum) class that represents events related to the system tray icon. This class is mapped to `QSystemTrayIcon.ActivationReason`.
+
+---
+
+## TrayEvent Members
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">DoubleClick</span>
+
+Event that occurs when the tray icon is double-clicked.
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">MiddleClick</span>
+
+Event that occurs when the tray icon is clicked with the middle button.
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">RightClick</span>
+
+Event that occurs when the tray icon is clicked with the right button (context menu).
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">LeftClick</span>
+
+Event that occurs when the tray icon is clicked with the left button.
+
+---
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">Unknown</span>
+
+Unknown event.
+
+---
+
+## Usage Example
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">Tray Event Handling</span>
+
+```python
+from pyloid import Pyloid, TrayEvent
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+app.set_tray_icon("icons/icon.ico")
+
+app.set_tray_actions(
+    {
+        TrayEvent.DoubleClick: lambda: print("Tray icon was double-clicked."),
+        TrayEvent.MiddleClick: lambda: print("Tray icon was middle-clicked."),
+        TrayEvent.RightClick: lambda: print("Tray icon was right-clicked."),
+        TrayEvent.LeftClick: lambda: print("Tray icon was left-clicked."),
+    }
+)
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    tray_actions: {
+      type: 'Dict[TrayEvent, Callable]',
+      typeDescription: 'Dict[TrayEvent, Callable]',
+      description: 'Dictionary mapping tray events to callback functions.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='bool' description='True if successful.' />

@@ -1,0 +1,143 @@
+---
+title: Serve
+---
+
+Pyloid provides functionality to serve static files with zero-copy optimization for high-performance frontend delivery. The server uses aiohttp with sendfile system calls and supports advanced features like range requests and ETag caching.
+
+---
+
+## Static File Serving
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">pyloid_serve</span>
+
+Starts a zero-copy optimized static file server using aiohttp with advanced performance features.
+
+- Uses **zero-copy file serving** with sendfile() system calls for maximum performance
+- Supports **HTTP range requests** for partial content delivery (resumable downloads)
+- Implements **ETag caching** to reduce unnecessary data transfer
+- Automatically finds available ports when not specified
+- Optimized for both development and production environments
+
+```python
+from pyloid import Pyloid
+from pyloid.serve import pyloid_serve
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+########## Usage ##########
+
+# Serve static files from a directory
+url = pyloid_serve("dist-frontend")
+
+# Create window and load the served content
+window = app.create_window(title="My App", width=1200, height=800)
+window.load_url(url)
+window.show_and_focus()
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    directory: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the static file directory to serve.',
+      required: true,
+    },
+    port: {
+      type: 'Optional[int]',
+      typeDescription: 'Optional[int]',
+      description: 'Server port number. If None, automatically finds an available port.',
+      default: 'None',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='str' description='URL of the started server (e.g., "http://127.0.0.1:54321").' />
+
+## Server Features
+
+### Zero-Copy File Serving
+
+The server uses zero-copy to transfer files directly from disk to network without copying data through user space, providing maximum performance for large files.
+
+### HTTP Range Requests
+
+Supports partial content delivery, enabling:
+- Resumable downloads in web browsers
+- Video/audio streaming with seeking capability
+- Efficient delivery of large files
+
+### ETag Caching
+
+Implements HTTP ETag headers for intelligent caching:
+- Browser can check if file has changed without downloading
+- Reduces bandwidth usage and improves load times
+- Automatic cache validation based on file modification time and size
+
+### Automatic Port Allocation
+
+When no port is specified, the server automatically finds an available port using the system's port allocation mechanism, preventing port conflicts.
+
+## Security Features
+
+- **Directory Traversal Protection**: Prevents access to files outside the served directory
+- **Path Validation**: Ensures all requested paths are within the allowed directory
+- **Safe Path Resolution**: Uses pathlib for secure path handling
+
+## Performance Optimizations
+
+- **Async I/O**: Uses aiohttp for non-blocking I/O operations
+- **Threaded Execution**: Runs server in daemon thread that terminates with main application
+- **Optimized Chunk Sizes**: Uses 64KB chunks for efficient streaming
+- **Connection Backlog**: Configured for high concurrency
+- **Keep-Alive**: Optimized connection reuse
+
+## Usage Examples
+
+### Basic Static File Serving
+
+```python
+from pyloid.serve import pyloid_serve
+
+# Serve a built React/Vue/Angular app
+url = pyloid_serve("build")
+print(f"Server started at: {url}")
+```
+
+### Custom Port
+
+```python
+from pyloid.serve import pyloid_serve
+
+# Use specific port
+url = pyloid_serve("public", port=3000)
+# Server will be available at http://127.0.0.1:3000
+```
+
+### Integration with Pyloid App
+
+```python
+from pyloid import Pyloid
+from pyloid.serve import pyloid_serve
+
+app = Pyloid(app_name="MyApp")
+
+# Start server
+frontend_url = pyloid_serve("dist")
+
+# Create main window
+main_window = app.create_window(
+    title="My Application",
+    width=1200,
+    height=800
+)
+main_window.load_url(frontend_url)
+main_window.show_and_focus()
+
+# Run the application
+app.run()
+```

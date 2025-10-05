@@ -1,0 +1,188 @@
+---
+title: Utils
+---
+
+Pyloid provides utility functions to help with resource path resolution, environment detection, platform identification, and networking.
+
+---
+
+## Production & Development
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_production_path</span>
+
+Constructs the absolute path to a resource file, adjusting based on the execution environment.
+
+- In a production environment (e.g., when packaged with PyInstaller), it prepends the application's base directory to the provided relative path.
+- If no path is provided, it returns the base path itself.
+- In a development environment (regular Python script), it simply returns the provided path as is. If no path is provided, it returns `None`.
+
+```python tab="production"
+from pyloid.utils import get_production_path
+
+########## Usage ##########
+
+# In production (e.g., PyInstaller bundle, sys._MEIPASS = '/tmp/_MEIabcde')
+prod_path = get_production_path("assets/icon.ico")  
+print(prod_path) # '/tmp/_MEIabcde/assets/icon.ico'
+
+base_prod_path = get_production_path()              
+print(base_prod_path) # '/tmp/_MEIabcde'
+```
+
+```python tab="development"
+from pyloid.utils import get_production_path
+
+########## Usage ##########
+
+path = get_production_path("assets/icon.ico")
+print(path) # 'assets/icon.ico'
+
+base_path = get_production_path()
+print(base_path) # None
+```
+
+**Production Example**
+
+The example shows how `get_production_path()` automatically returns the correct path in both development (dev) and bundled (prod) environments, allowing you to use the same code without additional branching.
+
+```python
+from pyloid import Pyloid
+from pyloid.utils import get_production_path
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+app.set_icon(get_production_path("assets/icon.ico")) # set the icon
+app.set_tray_icon(get_production_path("assets/icon.ico")) # set the tray icon
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'Optional[str]',
+      typeDescription: 'Optional[str]',
+      description:
+        "The relative path to the resource file from the application's root directory.",
+      default: 'None',
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='Optional[str]'
+  description='If in production: The absolute path to the resource file (or the base path if path is None). If not in production: The original path value passed to the function.'
+/>
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">is_production</span>
+
+Checks if the current environment is a production environment (e.g., PyInstaller or Nuitka bundle).
+
+- Returns `True` if running in a production environment, otherwise `False`.
+
+```python
+from pyloid.utils import is_production
+
+########## Usage ##########
+
+if is_production():
+    print("Running in production environment.")
+else:
+    print("Not in production environment.")
+```
+
+**Returns**
+
+<Returns
+  type='bool'
+  description='True if in a production environment, False otherwise.'
+/>
+
+## Platform
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_platform</span>
+
+Returns the name of the current system's platform.
+
+- Uses `platform.system()` to determine the OS.
+- Returns one of: `"windows"`, `"macos"`, `"linux"`.
+
+```python
+from pyloid.utils import get_platform
+
+########## Usage ##########
+
+platform_name = get_platform()
+print(platform_name)  # e.g., "windows"
+```
+
+**Returns**
+
+<Returns
+  type='str'
+  description='Platform name: "windows", "macos", or "linux".'
+/>
+
+## Path Operations
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_absolute_path</span>
+
+Returns the absolute path of the given relative path.
+
+```python
+from pyloid.utils import get_absolute_path
+
+########## Usage ##########
+
+absolute_path = get_absolute_path("assets/icon.ico")
+print(absolute_path)
+# e.g., 'C:/Users/aaaap/Documents/pyloid/pyloid/assets/icon.ico'
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The relative path to convert.',
+      required: true,
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns type='str' description='The absolute path.' />
+
+## Networking
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">get_free_port</span>
+
+Finds and returns an available random network port number from the operating system.
+
+- Creates a socket, binds to port `0` (let OS choose), retrieves the port, and closes the socket.
+- Note: The port may be reassigned to another process after this function returns, so use it quickly.
+
+```python
+from pyloid.utils import get_free_port
+
+########## Usage ##########
+
+port = get_free_port()
+print(f"Found available port: {port}")
+
+# Example: Start a web server on the found port
+import http.server
+server = http.server.HTTPServer(('localhost', port), http.server.SimpleHTTPRequestHandler)
+```
+
+**Returns**
+
+<Returns
+  type='int'
+  description='An available network port number (typically in the range 1024-65535).'
+/>
