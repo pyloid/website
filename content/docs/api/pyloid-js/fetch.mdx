@@ -29,14 +29,9 @@ The pyloid fetch provides automatic window ID injection and server URL resolutio
 import { fetch } from 'pyloid-js';
 
 // Fetch the 'greet' function to receive a greeting.
-fetch
-  .get(`/greet?name=Alice`)
-  .then((response) => {
-    console.log(response); // Outputs "Hello, Alice!"
-  })
-  .catch((error) => {
-    console.error('Error occurred during fetch call:', error);
-  });
+fetch(`/greet?name=Alice`)
+  .then(response => response.text())
+  .then(data => console.log(data));
 ```
 
 ### Backend
