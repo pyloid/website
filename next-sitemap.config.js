@@ -52,6 +52,8 @@ module.exports = {
       ? 1.0
       : path === '/docs'
       ? 0.9
+      : path.includes('/docs/distribute/')
+      ? 0.7
       : 0.7;
 
     const pathChangefreq = path.includes('/docs/api/')
@@ -60,6 +62,8 @@ module.exports = {
       ? 'monthly'
       : path.includes('/docs/core-concepts/')
       ? 'monthly'
+      : path.includes('/docs/distribute/')
+      ? 'weekly'
       : 'weekly';
 
     // Get actual file modification time for docs pages

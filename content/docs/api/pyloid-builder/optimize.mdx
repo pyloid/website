@@ -1,0 +1,157 @@
+---
+title: optimize
+---
+
+The `optimize` function removes unnecessary files from PyInstaller build output based on spec file patterns to reduce application size.
+
+---
+
+## Function Signature
+
+```python
+def optimize(base_path: str, spec_file: str) -> None:
+```
+
+## Description
+
+Optimizes PyInstaller build output by removing unnecessary files and directories based on patterns defined in a spec file. This significantly reduces the final application size by removing unused Qt libraries, translations, and other bloat.
+
+The function provides a rich terminal interface with real-time progress tracking, showing:
+- Current processing status
+- Space saved
+- Files and directories removed
+- Processing time
+
+---
+
+## Parameters
+
+<TypeTable
+  type={{
+    base_path: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Base path containing the PyInstaller build output (_internal folder or .app bundle).',
+      required: true,
+    },
+    spec_file: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the spec file containing removal patterns.',
+      required: true,
+    },
+  }}
+/>
+
+## Spec File Format
+
+The spec file uses a simple text format with the following rules:
+
+- **Include patterns**: Files/directories to remove (one per line)
+- **Exclude patterns**: Files to keep (prefixed with `!`)
+- **Comments**: Lines starting with `#` are ignored
+- **Empty lines**: Ignored
+
+### Pattern Examples
+
+```text
+# Remove all Qt3D libraries
+PySide6/Qt63D*
+
+# Remove Qt Charts
+PySide6/Qt6Charts*
+
+# Remove translations but keep English
+PySide6/translations/qtwebengine_locales/*.pak
+!PySide6/translations/qtwebengine_locales/en-US.pak
+
+# Remove QML files
+PySide6/qml
+
+# Remove debug resources
+PySide6/resources/qtwebengine_devtools_resources.pak
+```
+
+### Platform-Specific Spec Files
+
+Different platforms have different optimization patterns:
+
+- **Windows**: `windows_optimize.spec`
+- **macOS**: `macos_optimize.spec`
+- **Linux**: `linux_optimize.spec`
+
+---
+
+## Usage Examples
+
+### Basic Usage
+
+```python
+from pyloid_builder.optimize import optimize
+
+# Optimize Windows build
+optimize('./dist/MyApp/_internal', './src/build/windows_optimize.spec')
+
+# Optimize macOS app bundle
+optimize('./dist/MyApp.app', './src/build/macos_optimize.spec')
+```
+
+### Complete Build Script
+
+```python
+from pyloid_builder.pyinstaller import pyinstaller
+from pyloid_builder.optimize import optimize
+from pyloid.utils import get_platform
+
+# Configuration
+main_script = './src-pyloid/main.py'
+name = 'pyloid-app'
+dist_path = './dist'
+work_path = './build'
+
+# Platform-specific settings
+if get_platform() == 'windows':
+    icon = './src-pyloid/icons/icon.ico'
+    optimize_spec = './src-pyloid/build/windows_optimize.spec'
+    internal_path = f'{dist_path}/{name}/_internal'
+elif get_platform() == 'macos':
+    icon = './src-pyloid/icons/icon.icns'
+    optimize_spec = './src-pyloid/build/macos_optimize.spec'
+    internal_path = f'{dist_path}/{name}.app'
+else:  # linux
+    icon = './src-pyloid/icons/icon.png'
+    optimize_spec = './src-pyloid/build/linux_optimize.spec'
+    internal_path = f'{dist_path}/{name}/_internal'
+
+# Build with PyInstaller
+pyinstaller(
+    main_script,
+    [
+        f'--name={name}',
+        f'--distpath={dist_path}',
+        f'--workpath={work_path}',
+        '--clean',
+        '--noconfirm',
+        '--onedir',
+        '--windowed',
+        '--add-data=./src-pyloid/icons/:./src-pyloid/icons/',
+        '--add-data=./dist-front/:./dist-front/',
+        f'--icon={icon}',
+    ],
+)
+
+# Optimize the build
+optimize(internal_path, optimize_spec)
+```
+
+---
+
+## Error Handling
+
+The function may raise the following exceptions:
+
+- **FileNotFoundError**: When spec file is not found
+- **FileNotFoundError**: When target directory doesn't exist
+- **OSError**: When file/directory removal fails
+
+All errors are displayed in the terminal with detailed messages.

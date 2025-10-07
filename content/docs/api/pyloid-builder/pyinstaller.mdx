@@ -1,0 +1,163 @@
+---
+title: pyinstaller
+---
+
+The `pyinstaller` function provides a rich terminal interface for building Pyloid applications with PyInstaller, offering real-time build progress tracking and detailed logging.
+
+---
+
+## Function Signature
+
+```python
+def pyinstaller(scriptname: str, options: List[str]) -> None:
+```
+
+## Description
+
+Executes PyInstaller with enhanced visual feedback and progress monitoring. Unlike standard PyInstaller, this function provides:
+
+- **Real-time progress display** with build logs
+- **Rich terminal interface** with panels and colors
+- **Dynamic layout** that adapts to terminal size
+- **Error handling** with detailed failure information
+- **Success/failure indicators** with appropriate styling
+
+The interface splits the terminal into two panels:
+- **Left panel**: Build information (script name, options)
+- **Right panel**: Live build log with scrolling
+
+---
+
+## Parameters
+
+<TypeTable
+  type={{
+    scriptname: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the main Python script to build.',
+      required: true,
+    },
+    options: {
+      type: 'List[str]',
+      typeDescription: 'List[str]',
+      description: 'List of PyInstaller command-line options.',
+      required: true,
+    },
+  }}
+/>
+
+## Common PyInstaller Options
+
+### Basic Options
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `--name` | Application name | `--name=MyApp` |
+| `--distpath` | Distribution directory | `--distpath=./dist` |
+| `--workpath` | Working/build directory | `--workpath=./build` |
+| `--clean` | Clean cache and temporary files | `--clean` |
+| `--noconfirm` | Replace output directory without asking | `--noconfirm` |
+
+### Build Mode Options
+
+| Option | Description |
+|--------|-------------|
+| `--onedir` | Create one-folder bundle (default) |
+| `--windowed` | Hide console window (GUI apps) |
+
+### Data and Resource Options
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `--add-data` | Add data files/directories | `--add-data=src/:dest/` |
+| `--icon` | Set application icon | `--icon=icon.ico` |
+| `--hidden-import` | Add hidden imports | `--hidden-import=module` |
+
+---
+
+## Usage Examples
+
+### Basic GUI Application
+
+```python
+from pyloid_builder.pyinstaller import pyinstaller
+
+pyinstaller(
+    'main.py',
+    [
+        '--name=MyApp',
+        '--onedir',
+        '--windowed',
+        '--clean',
+        '--noconfirm',
+    ]
+)
+```
+
+### Complete Pyloid Application
+
+```python
+from pyloid_builder.pyinstaller import pyinstaller
+from pyloid.utils import get_platform
+
+# Platform-specific icon
+if get_platform() == 'windows':
+    icon = './icons/icon.ico'
+elif get_platform() == 'macos':
+    icon = './icons/icon.icns'
+else:
+    icon = './icons/icon.png'
+
+pyinstaller(
+    './src-pyloid/main.py',
+    [
+        '--name=pyloid-app',
+        '--distpath=./dist',
+        '--workpath=./build',
+        '--clean',
+        '--noconfirm',
+        '--onedir',
+        '--windowed',
+        '--add-data=./src-pyloid/icons/:./src-pyloid/icons/',
+        '--add-data=./dist-front/:./dist-front/',
+        f'--icon={icon}',
+    ]
+)
+```
+
+---
+
+## Integration with Optimize
+
+The `pyinstaller` function is typically used together with `optimize`:
+
+```python
+# 1. Build the application
+pyinstaller('main.py', build_options)
+
+# 2. Optimize the output
+from pyloid_builder.optimize import optimize
+optimize('./dist/MyApp/_internal', 'optimize.spec')
+```
+
+This workflow provides a complete build and optimization pipeline for Pyloid applications.
+
+---
+
+## Platform-Specific Notes
+
+### Windows
+- Icon format: `.ico`
+- Executable extension: `.exe`
+- Console hiding: `--windowed` option
+
+### macOS
+- Icon format: `.icns`
+- Bundle structure: `.app` directory
+- Code signing may be required for distribution
+
+### Linux
+- Icon format: `.png`
+- No extension for executables
+- May require additional system dependencies

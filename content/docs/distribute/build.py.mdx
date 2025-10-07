@@ -6,6 +6,17 @@ Build utilities for creating distributable Pyloid applications using PyInstaller
 
 ---
 
+## Overview
+
+Pyloid provides two main build utilities:
+
+1. **`pyinstaller`**: Enhanced PyInstaller wrapper with rich terminal interface
+2. **`optimize`**: Post-build optimization to reduce application size
+
+These utilities work together to create optimized, distributable Pyloid applications for all platforms.
+
+---
+
 ## Building Applications
 
 ### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">pyinstaller</span>
@@ -64,45 +75,48 @@ pyinstaller(
 
 ### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">optimize</span>
 
-Optimizes PyInstaller build output by removing unnecessary files to reduce application size.
+Optimizes PyInstaller build output by removing unnecessary files based on spec file patterns to reduce application size.
 
-This function is only available for --onedir builds.
+<Callout type="warning">
+This function only works with `--onedir` builds, not `--onefile` builds.
+</Callout>
+
+<Callout type="info">
+For detailed optimization options, see the [optimize API documentation](./api/pyloid-builder/optimize).
+</Callout>
 
 ```python
 from pyloid_builder.optimize import optimize
 
 ########## Usage ##########
 
-# Remove specific files and folders
-optimize('dist/MyApp', [
-    'tcl',           # Remove entire tcl folder
-    'tk',            # Remove entire tk folder
-    '*.dll',         # Remove all DLL files (wildcard)
-    'libEGL.dll',    # Remove specific file
-])
+# Basic optimization
+optimize('./dist/MyApp/_internal', './build/windows_optimize.spec')
 
-# Optimize with patterns
-optimize('dist/MyApp', [
-    'Qt5*.dll',      # Remove Qt5 DLLs
-    'lib*.so*',      # Remove library files
-    'test_*',        # Remove test files
-])
+# Platform-specific optimization
+import platform
+if platform.system() == 'Windows':
+    optimize('./dist/MyApp/_internal', './build/windows_optimize.spec')
+elif platform.system() == 'Darwin':
+    optimize('./dist/MyApp.app', './build/macos_optimize.spec')
+else:
+    optimize('./dist/MyApp/_internal', './build/linux_optimize.spec')
 ```
 
 **Parameters**
 
 <TypeTable
   type={{
-    path: {
+    base_path: {
       type: 'str',
       typeDescription: 'str',
-      description: 'Path to the application build output directory.',
+      description: 'Path to the PyInstaller build output (_internal folder or .app bundle).',
       required: true,
     },
-    remove_list: {
-      type: 'List[str]',
-      typeDescription: 'List[str]',
-      description: 'List of files or folders to remove. Supports wildcards (*, ?).',
+    spec_file: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'Path to the spec file containing removal patterns.',
       required: true,
     },
   }}
@@ -110,7 +124,7 @@ optimize('dist/MyApp', [
 
 **Returns**
 
-<Returns type='None' description='Removes specified files and displays optimization results.' />
+<Returns type='None' description='Removes files according to spec patterns and displays optimization results.' />
 
 ## Build Scripts
 
@@ -128,30 +142,29 @@ work_path = './build'
 
 # Platform-specific icon
 if get_platform() == 'windows':
-	icon = './src-pyloid/icons/icon.ico'
+    icon = './src-pyloid/icons/icon.ico'
 elif get_platform() == 'macos':
-	icon = './src-pyloid/icons/icon.icns'
+    icon = './src-pyloid/icons/icon.icns'
 else:
-	icon = './src-pyloid/icons/icon.png'
-
+    icon = './src-pyloid/icons/icon.png'
 
 if __name__ == '__main__':
-    # Step 1: Build with PyInstaller
-	pyinstaller(
-		main_script,
-		[
-			f'--name={name}',
-			f'--distpath={dist_path}',
-			f'--workpath={work_path}',
-			'--clean',
-			'--noconfirm',
-			'--onedir',
-			'--windowed',
-			'--add-data=./src-pyloid/icons/:./src-pyloid/icons/',
-			'--add-data=./dist-front/:./dist-front/',
-			f'--icon={icon}',
-		],
-	)
+    # Build with PyInstaller
+    pyinstaller(
+        main_script,
+        [
+            f'--name={name}',
+            f'--distpath={dist_path}',
+            f'--workpath={work_path}',
+            '--clean',
+            '--noconfirm',
+            '--onedir',
+            '--windowed',
+            '--add-data=./src-pyloid/icons/:./src-pyloid/icons/',
+            '--add-data=./dist-front/:./dist-front/',
+            f'--icon={icon}',
+        ],
+    )
 ```
 
 ### Build with Optimization
@@ -162,49 +175,47 @@ from pyloid_builder.optimize import optimize
 from pyloid.utils import get_platform
 
 # Configuration
-main_script = './src/main.py'
-app_name = 'MyApp'
+main_script = './src-pyloid/main.py'
+name = 'pyloid-app'
 dist_path = './dist'
 work_path = './build'
 
-# Platform-specific icon
+# Platform-specific settings
 if get_platform() == 'windows':
-    icon = './assets/icon.ico'
+    icon = './src-pyloid/icons/icon.ico'
+    optimize_spec = './src-pyloid/build/windows_optimize.spec'
+    internal_path = f'{dist_path}/{name}/_internal'
 elif get_platform() == 'macos':
-    icon = './assets/icon.icns'
-else:
-    icon = './assets/icon.png'
+    icon = './src-pyloid/icons/icon.icns'
+    optimize_spec = './src-pyloid/build/macos_optimize.spec'
+    internal_path = f'{dist_path}/{name}.app'
+else:  # linux
+    icon = './src-pyloid/icons/icon.png'
+    optimize_spec = './src-pyloid/build/linux_optimize.spec'
+    internal_path = f'{dist_path}/{name}/_internal'
 
 if __name__ == '__main__':
     # Step 1: Build with PyInstaller
     pyinstaller(
         main_script,
         [
-            f'--name={app_name}',
+            f'--name={name}',
             f'--distpath={dist_path}',
             f'--workpath={work_path}',
             '--clean',
             '--noconfirm',
             '--onedir',
             '--windowed',
+            '--add-data=./src-pyloid/icons/:./src-pyloid/icons/',
+            '--add-data=./dist-front/:./dist-front/',
             f'--icon={icon}',
-            '--add-data=./assets:assets',
         ],
     )
 
-    # Step 2: Optimize build output
-    optimize(
-        f'{dist_path}/{app_name}',
-        [
-            'tcl',           # Remove TCL/TK folders
-            'tk',
-            'Qt5*.dll',      # Remove unnecessary Qt DLLs
-            '*.tmp',         # Remove temporary files
-            'test_*',        # Remove test files
-        ],
-    )
+    # Step 2: Optimize the build
+    optimize(internal_path, optimize_spec)
 
-    print(f"✅ {app_name} built and optimized successfully!")
+    print(f"✅ {name} built and optimized successfully!")
 ```
 
 ## Build Options
@@ -223,25 +234,54 @@ if __name__ == '__main__':
 | `--add-data=src:dst` | Add additional data files |
 | `--hidden-import=module` | Include hidden imports |
 
-### Optimization Targets
+### Spec File Format
 
-Common files and folders to remove during optimization:
+Optimization uses spec files that define which files to remove. Create platform-specific spec files:
 
-```python
-optimization_targets = [
-    # Python standard library components
-    'tcl', 'tk', 'lib2to3', 'distutils',
-
-    # Unnecessary Qt components
-    'Qt5Qml.dll', 'Qt5Quick.dll', 'Qt5Network.dll',
-
-    # Development and test files
-    '*.pyc', '*.pyo', '__pycache__', 'test_*',
-
-    # Platform-specific files
-    '*.pdb', '*.lib', '*.exp',  # Windows debug files
-]
+**windows_optimize.spec:**
+```text
+PySide6/translations/*.qm
+PySide6/translations/qtwebengine_locales/*.pak
+!PySide6/translations/qtwebengine_locales/en-US.pak
+PySide6/qml
+PySide6/Qt63D*
+PySide6/Qt6Charts*
+PySide6/Qt6DataVisualization*
+# ... etc
 ```
+
+**macos_optimize.spec:**
+```text
+Contents/Frameworks/PySide6/Qt/lib/Qt3D*
+Contents/Frameworks/PySide6/Qt/lib/QtCharts*
+Contents/Resources/PySide6/Qt/qml
+Contents/Resources/PySide6/Qt/translations
+# ... etc
+```
+
+### Common Optimization Targets
+
+| Category | Examples | Purpose |
+|----------|----------|---------|
+| **Qt Components** | `Qt63D*`, `Qt6Charts*`, `Qt6Multimedia*` | Remove unused Qt libraries |
+| **Translations** | `*.qm`, `qtwebengine_locales/*.pak` | Keep only essential locales |
+| **QML Files** | `qml/` | Remove if not using QML |
+| **Debug Files** | `*.pdb`, `*_debug.*` | Remove debug symbols |
+| **Python StdLib** | `tcl/`, `tk/`, `test_*` | Remove unused standard library parts |
+
+### Platform-Specific Considerations
+
+**Windows:**
+- Target: `dist/AppName/_internal/`
+- Remove: Qt DLLs, debug files, unused translations
+
+**macOS:**
+- Target: `dist/AppName.app/`
+- Remove: Framework libraries, QML resources, translations
+
+**Linux:**
+- Target: `dist/AppName/_internal/`
+- Similar to Windows but may include additional system libraries
 
 ### Running Builds
 
@@ -265,19 +305,60 @@ bun run build
 
 ## Troubleshooting
 
-### Common Issues
+### PyInstaller Issues
 
 **Build fails with import errors:**
 - Use `--hidden-import` to include missing modules
-- Check that all dependencies are installed
+- Check that all dependencies are installed in the build environment
 
 **Application won't start:**
 - Ensure all data files are included with `--add-data`
 - Check that the main script path is correct
+- Verify that required DLLs/.so files are not removed during optimization
 
 **Large bundle size:**
-- Use the `optimize` function to remove unnecessary files
+- Use the `optimize` function with appropriate spec files
+- Review included packages and remove unnecessary ones
 
 **Icon not showing:**
 - Ensure the icon path is correct and the file exists
-- Use platform-appropriate icon formats (.ico for Windows, .icns for macOS)
+- Use platform-appropriate icon formats (.ico for Windows, .icns for macOS, .png for Linux)
+
+### Optimization Issues
+
+**Optimization removes required files:**
+- Check spec file patterns - use exclude patterns (`!`) to protect important files
+- Test the application after optimization to ensure it still works
+- Start with minimal optimization and gradually add more patterns
+
+**Spec file not found:**
+- Ensure spec files exist in the correct location
+- Check file paths in your build script
+- Use absolute paths if relative paths cause issues
+
+**Optimization takes too long:**
+- Large applications may take time to scan
+- Consider excluding large directories from scanning
+- Use more specific patterns instead of broad wildcards
+
+**Application crashes after optimization:**
+- Some Qt libraries might be required even if not directly used
+- Check for missing dependencies in error logs
+- Adjust spec file to be less aggressive
+
+### Platform-Specific Issues
+
+**Windows:**
+- Ensure Visual C++ redistributables are handled correctly
+- Check that all required DLLs are preserved
+- Icon format must be .ico
+
+**macOS:**
+- Code signing may be required for distribution
+- Ensure app bundle structure is maintained
+- Check Info.plist requirements
+
+**Linux:**
+- System libraries may need to be included
+- Check for missing .so files
+- Ensure proper permissions on executable
