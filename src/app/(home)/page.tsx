@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Pyloid - Electron for Python Developer',
     description:
-      'Pyloid: Electron for Python Developer • Web-based desktop app framework',
+      'Pyloid: Electron for Python Developer • Modern Web-based desktop app framework',
   },
 };
 
