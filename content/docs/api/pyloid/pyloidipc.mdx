@@ -1,0 +1,91 @@
+---
+title: PyloidIPC
+---
+
+PyloidIPC enables communication between JavaScript and Python via IPC (Inter-Process Communication). 
+It allows JavaScript code running in the browser window to call Python methods and receive responses.
+
+---
+
+## Initialization
+
+```python
+from pyloid.ipc import PyloidIPC
+
+class CustomIPC(PyloidIPC):
+    pass
+```
+
+---
+
+## Bridge Decorator
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">Bridge</span>
+
+Creates a slot that can be called from JavaScript via IPC.
+
+```python
+from pyloid.ipc import PyloidIPC, Bridge
+
+class CustomIPC(PyloidIPC):
+    @Bridge(str, result=str)
+    def echo(self, message):
+        return f'Message received in Python: {message}'
+```
+---
+
+## Usage Example
+
+(Python)
+```python
+from pyloid import Pyloid
+from pyloid.ipc import PyloidIPC, Bridge
+
+app = Pyloid('Pyloid-App')
+
+class CustomIPC(PyloidIPC):
+    @Bridge(str, result=str)
+    def echo(self, message):
+        return f'Message received in Python: {message}'
+
+    @Bridge(int, int, result=int)
+    def add(self, a, b):
+        return a + b
+
+    @Bridge(result=str)
+    def create_window(self):
+        win = self.pyloid.create_window(title='Pyloid Browser')
+        win.load_url('https://www.google.com')
+        win.show()
+        win.focus()
+        return win.get_id()
+
+# Create main window
+window = app.create_window(
+    title='Pyloid Browser',
+    ipc=[CustomIPC()],
+)
+
+window.load_file('index.html')
+window.show()
+window.focus()
+
+app.run()
+```
+
+(JavaScript)
+```javascript
+import { ipc } from 'pyloid-js';
+
+let result = await ipc.CustomIPC.echo('Hello, Pyloid!').then((result) => {
+    console.log(result); // "Message received in Python: Hello, Pyloid!"
+})
+
+let sum = await ipc.CustomIPC.add(5, 3).then((sum) => {
+    console.log(sum); // 8
+})
+
+let window_id = await ipc.CustomIPC.create_window().then((window_id) => {
+    console.log(window_id); // "eae338a3-c8cb-4103-852f-404486beea0d"
+})
+```

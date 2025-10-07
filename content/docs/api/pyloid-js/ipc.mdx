@@ -1,0 +1,143 @@
+---
+title: IPC
+---
+
+The `ipc` object enables communication between JavaScript and Python via Inter-Process Communication. It allows JavaScript code to call methods defined in [PyloidIPC](/docs/api/pyloid/pyloidipc) classes that are registered with the Pyloid window.
+
+---
+
+## Usage
+
+### Accessing IPC Classes
+
+IPC classes registered in Python can be accessed through the `ipc` object using the class name.
+
+```javascript
+import { ipc } from 'pyloid-js';
+
+// Access the CustomIPC class methods
+ipc.CustomIPC.echo('Hello, Pyloid!').then(result => {
+  console.log(result); // "Message received in Python: Hello, Pyloid!"
+});
+```
+
+### Calling IPC Methods
+
+IPC methods return Promises that resolve with the return value from the Python method.
+
+```javascript
+import { ipc } from 'pyloid-js';
+
+// Call methods with parameters
+ipc.CustomIPC.add(5, 3).then(sum => {
+  console.log(sum); // 8
+});
+
+// Call methods without parameters
+ipc.CustomIPC.create_window().then(windowId => {
+  console.log(windowId); // "eae338a3-c8cb-4103-852f-404486beea0d"
+});
+```
+
+---
+
+## Example
+
+### Python Backend
+
+```python
+from pyloid import Pyloid
+from pyloid.ipc import PyloidIPC, Bridge
+
+app = Pyloid('Pyloid-App')
+
+class CustomIPC(PyloidIPC):
+    @Bridge(str, result=str)
+    def echo(self, message):
+        return f'Message received in Python: {message}'
+
+    @Bridge(int, int, result=int)
+    def add(self, a, b):
+        return a + b
+
+    @Bridge(result=str)
+    def create_window(self):
+        win = self.pyloid.create_window(title='Pyloid Browser')
+        win.load_url('https://www.google.com')
+        win.show()
+        win.focus()
+        return win.get_id()
+
+# Create main window with IPC
+window = app.create_window(
+    title='Pyloid Browser',
+    ipc=[CustomIPC()],
+)
+
+window.load_file('index.html')
+window.show()
+window.focus()
+
+app.run()
+```
+
+### JavaScript Frontend
+
+```javascript
+import { ipc } from 'pyloid-js';
+
+// Call IPC methods
+async function runExample() {
+  try {
+    // Echo message
+    const result = await ipc.CustomIPC.echo('Hello, Pyloid!');
+    console.log(result); // "Message received in Python: Hello, Pyloid!"
+
+    // Add numbers
+    const sum = await ipc.CustomIPC.add(5, 3);
+    console.log(sum); // 8
+
+    // Create new window
+    const windowId = await ipc.CustomIPC.create_window();
+    console.log(windowId); // "eae338a3-c8cb-4103-852f-404486beea0d"
+    
+  } catch (error) {
+    console.error('IPC call failed:', error);
+  }
+}
+
+runExample();
+```
+
+---
+
+## Error Handling
+
+IPC calls can fail due to various reasons. Always handle errors appropriately:
+
+```javascript
+import { ipc } from 'pyloid-js';
+
+ipc.CustomIPC.someMethod('param')
+  .then(result => {
+    console.log('Success:', result);
+  })
+  .catch(error => {
+    console.error('IPC call failed:', error);
+  });
+```
+
+Or using async/await:
+
+```javascript
+import { ipc } from 'pyloid-js';
+
+async function callIPC() {
+  try {
+    const result = await ipc.CustomIPC.someMethod('param');
+    console.log('Success:', result);
+  } catch (error) {
+    console.error('IPC call failed:', error);
+  }
+}
+```
