@@ -35,13 +35,13 @@ export function FeaturesSection() {
       skeleton: <SkeletonFour />,
       className: 'col-span-1 lg:col-span-3 border-b lg:border-none',
     },
-    // {
-    //   title: 'Custom Build Tool and Optimize',
-    //   description:
-    //     'Built-in build tool and auto optimize to simplify distribution.',
-    //   skeleton: <SkeletonFive />,
-    //   className: 'col-span-1 lg:col-span-6',
-    // },
+    {
+      title: 'Custom Build Tool and Optimize',
+      description:
+        'Built-in build tool and auto optimize to simplify distribution.',
+      skeleton: <SkeletonFive />,
+      className: 'col-span-1 lg:col-span-6',
+    },
   ];
   return (
     <div className='relative z-20 py-10 lg:py-40 max-w-7xl mx-auto'>
