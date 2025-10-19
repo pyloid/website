@@ -9,7 +9,8 @@
     "postinstall": "fumadocs-mdx",
     "postbuild": "next-sitemap",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "generate-llms-txt": "python generate_llms_txt.py"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

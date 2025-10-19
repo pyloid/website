@@ -1,0 +1,71 @@
+# Pyloid
+
+> Pyloid is a Python framework for building desktop applications with web technologies (HTML, CSS, JavaScript).
+> It provides an Electron-like experience for Python developers.
+
+## Docs
+
+- [Full Docs](https://pyloid.com/llms-full.txt): Full documentation of Pyloid.
+
+## Quick Start
+
+- [Quick Start](https://pyloid.com/docs/index)
+- [LLMs for AI](https://pyloid.com/docs/llm-for-ai)
+- [Prequisites](https://pyloid.com/docs/prequisites)
+
+## Core Concepts
+
+- [Thread Safety](https://pyloid.com/docs/core-concepts/thread-safety)
+
+## API Reference - Pyloid
+
+- [BrowserWindow](https://pyloid.com/docs/api/pyloid/browserwindow)
+- [Monitor](https://pyloid.com/docs/api/pyloid/monitor)
+- [Pyloid](https://pyloid.com/docs/api/pyloid/pyloid)
+- [PyloidIPC](https://pyloid.com/docs/api/pyloid/pyloidipc)
+- [PyloidRPC](https://pyloid.com/docs/api/pyloid/pyloidrpc)
+- [PyloidTimer](https://pyloid.com/docs/api/pyloid/pyloidtimer)
+- [Serve](https://pyloid.com/docs/api/pyloid/serve)
+- [Store](https://pyloid.com/docs/api/pyloid/store)
+- [Trayevent](https://pyloid.com/docs/api/pyloid/trayevent)
+- [Utils](https://pyloid.com/docs/api/pyloid/utils)
+
+## API Reference - Pyloid JS
+
+- [BaseAPI](https://pyloid.com/docs/api/pyloid-js/baseAPI)
+- [Event](https://pyloid.com/docs/api/pyloid-js/event)
+- [Fetch](https://pyloid.com/docs/api/pyloid-js/fetch)
+- [IPC](https://pyloid.com/docs/api/pyloid-js/ipc)
+- [RPC](https://pyloid.com/docs/api/pyloid-js/rpc)
+
+## API Reference - Pyloid Builder
+
+- [optimize](https://pyloid.com/docs/api/pyloid-builder/optimize)
+- [pyinstaller](https://pyloid.com/docs/api/pyloid-builder/pyinstaller)
+
+## Distribution
+
+- [build.py](https://pyloid.com/docs/distribute/build.py)
+
+## Guides
+
+- [Auto Start](https://pyloid.com/docs/guides/autostart)
+- [Calling JavaScript from Python](https://pyloid.com/docs/guides/calling-js-from-python)
+- [Calling Python from JavaScript](https://pyloid.com/docs/guides/calling-python-from-js)
+- [Clipboard](https://pyloid.com/docs/guides/clipboard)
+- [Desktop Monitor](https://pyloid.com/docs/guides/desktop-monitor)
+- [DevTools Settings](https://pyloid.com/docs/guides/devtools-settings)
+- [File Dialog](https://pyloid.com/docs/guides/file-dialog)
+- [File Watcher](https://pyloid.com/docs/guides/filewatcher)
+- [Keyboard Shortcuts](https://pyloid.com/docs/guides/keyboard-shotcuts)
+- [Load Webview](https://pyloid.com/docs/guides/load-webview)
+- [Notification](https://pyloid.com/docs/guides/notification)
+- [Position](https://pyloid.com/docs/guides/position)
+- [Production Utils](https://pyloid.com/docs/guides/production-utils)
+- [Serve Frontend(Static Files)](https://pyloid.com/docs/guides/serve-frontend)
+- [Splash Screen](https://pyloid.com/docs/guides/splash-screen)
+- [Timer](https://pyloid.com/docs/guides/timer)
+- [Tray](https://pyloid.com/docs/guides/tray)
+- [Video](https://pyloid.com/docs/guides/video)
+- [Window Drag Region](https://pyloid.com/docs/guides/window-drag-region)
+- [Window Border Radius and Transparency](https://pyloid.com/docs/guides/window-radius-and-transparent)

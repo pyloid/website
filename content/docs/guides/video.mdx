@@ -1,0 +1,62 @@
+---
+title: Video
+---
+
+Pyloid is based on Qt WebEngine, which **only supports open-source codecs**. This is a policy to avoid patent issues, so proprietary codecs like MP4/H.264 are not supported.
+
+When you need to play videos in your web application, you must use videos encoded with open-source codecs.
+
+## Supported Video Codecs
+
+The open-source video codecs supported by Pyloid (Qt WebEngine) are:
+
+- **VP8** - Used in WebM containers
+- **VP9** - Used in WebM containers (improved compression over VP8)
+- **WebM** - Container format using VP8 or VP9 codecs
+
+## Unsupported Video Codecs
+
+The following codecs are **not supported** due to patent issues:
+
+- **MP4/H.264** - The most widely used codec but protected by patents
+- **H.265/HEVC** - Successor to H.264
+- Other proprietary codecs
+
+## Basic Usage
+
+You can play WebM format videos using the HTML5 `<video>` tag:
+
+```html
+<video
+    src="https://dl11.webmfiles.org/big-buck-bunny_trailer-.webm"
+    controls
+    width="640"
+    height="360">
+</video>
+```
+
+## Using Local Video Files
+
+When playing locally stored WebM files:
+
+```html
+<video controls width="640" height="360">
+    <source src="/videos/my-video.webm" type="video/webm">
+</video>
+```
+
+
+## Important Notes
+
+- **MP4/H.264 files will not play** in Pyloid applications.
+- Videos must be converted to WebM format before use.
+- Large video files can increase your application's distribution size, so appropriate compression is necessary.
+- If loading videos from external URLs, check CORS policies.
+
+## Additional Resources
+
+- [WebM Project](https://www.webmproject.org/)
+- [FFmpeg Official Documentation](https://ffmpeg.org/documentation.html)
+- [MDN: HTML Video Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video)
+- [VP9 Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/VP9)
+
