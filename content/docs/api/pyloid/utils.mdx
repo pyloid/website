@@ -186,3 +186,61 @@ server = http.server.HTTPServer(('localhost', port), http.server.SimpleHTTPReque
   type='int'
   description='An available network port number (typically in the range 1024-65535).'
 />
+
+## Qt Backend
+
+### <span className="font-mono bg-primary/10 px-2 py-1 rounded text-primary">set_qt_backend</span>
+
+Sets the Qt Quick backend to force a specific rendering mode.
+
+- Allows changing the Qt Quick rendering backend by setting the `QT_QUICK_BACKEND` environment variable.
+- Setting it to `'software'` forces software rendering, which can be useful in environments with graphics driver issues or where hardware acceleration is not available.
+- **Important**: This setting must be applied before the Qt application is initialized.
+
+```python
+from pyloid.utils import set_qt_backend
+
+########## Usage ##########
+
+# Force software rendering (useful for compatibility)
+set_qt_backend('software')
+
+# You can also use other backends like 'opengl' or 'd3d12' if needed
+# set_qt_backend('opengl')
+```
+
+**Production Example**
+
+This is typically called at the very beginning of your application, before creating any Pyloid instances:
+
+```python
+from pyloid.utils import set_qt_backend
+from pyloid import Pyloid
+
+# Set software rendering for better compatibility
+set_qt_backend('software')
+
+app = Pyloid(app_name="MyApp", single_instance=True)
+
+# Rest of your application code...
+```
+
+**Parameters**
+
+<TypeTable
+  type={{
+    backend: {
+      type: 'str',
+      typeDescription: 'str',
+      description: 'The backend to use for Qt Quick rendering.',
+      default: "'software'",
+    },
+  }}
+/>
+
+**Returns**
+
+<Returns
+  type='None'
+  description='This function does not return a value.'
+/>
