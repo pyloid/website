@@ -63,7 +63,9 @@ window = app.create_window(
     frame=True,
     context_menu=True,
     dev_tools=True,
-    rpc=rpc
+    transparent=False,
+    zoomable=False,
+    IPCs=[],
 )
 ```
 
@@ -124,6 +126,18 @@ window = app.create_window(
       typeDescription: 'bool | None',
       description: 'Whether the window is transparent',
       default: 'False',
+    },
+    zoomable: {
+      type: 'bool',
+      typeDescription: 'bool | None',
+      description: 'Whether the window is zoomable',
+      default: 'False',
+    },
+    IPCs: {
+      type: 'List[PyloidIPC]',
+      typeDescription: 'List[PyloidIPC] | None',
+      description: 'List of IPCs to be used in the window',
+      default: '[]',
     },
   }}
 />
