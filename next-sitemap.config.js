@@ -27,7 +27,8 @@ module.exports = {
   generateRobotsTxt: false, // We already have robots.txt
   changefreq: 'weekly',
   priority: 0.7,
-  sitemapSize: 7000,
+  sitemapSize: 50000,
+  generateIndexSitemap: false,
   robotsTxtOptions: {
     policies: [
       {
